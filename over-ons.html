@@ -427,7 +427,7 @@
     v.setAttribute('muted',''); v.setAttribute('playsinline','');
     if(window.Hls && Hls.isSupported()){
       if(v._hls){ try{ v._hls.destroy(); }catch(e){} }
-      var h=new Hls({maxBufferLength:20,capLevelToPlayerSize:false,abrEwmaDefaultEstimate:8000000,startFragPrefetch:true});
+      var h=new Hls({preferManagedMediaSource:false,maxBufferLength:20,capLevelToPlayerSize:false,abrEwmaDefaultEstimate:8000000,startFragPrefetch:true});
       h.on(Hls.Events.MANIFEST_PARSED,function(){ if(!h.levels.length) return; var top=h.levels.reduce(function(b,l,i){ return (l.height||0) > (h.levels[b].height||0) ? i : b; },0); var quick=0; h.levels.forEach(function(l,i){ if((l.height||0)<=480 && (l.height||0)>(h.levels[quick].height||0)) quick=i; }); h.startLevel=quick; v._topLevel=top; var up=function(){ try{ h.loadLevel=top; h.nextLevel=top; }catch(e){} v.removeEventListener("playing",up); }; v.addEventListener("playing",up); });
       v._hls=h;
       h.on(Hls.Events.MEDIA_ATTACHED,function(){ h.loadSource(src); });
@@ -962,7 +962,7 @@ function init_whats_app_modal() {
       <div style="display: flex; align-items: center; gap: 32px; flex-wrap: wrap;">
         <div style="display: flex; align-items: center; gap: 8px;">
           <svg viewBox="0 0 20 20" aria-hidden="true" style="width: 16px; height: 16px;" fill="none" stroke="#63736F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3.5h3l1.5 4-2 1.5a11 11 0 0 0 4.5 4.5l1.5-2 4 1.5v3a1.5 1.5 0 0 1-1.6 1.5C8.6 17 3 11.4 2.5 5.1A1.5 1.5 0 0 1 4 3.5Z"></path></svg>
-          <p style="font-size: 14px; font-weight: 500; color: #0E2D30;">020 – 324 21 88</p>
+          <p style="font-size: 14px; font-weight: 500; color: #0E2D30;">020 - 324 21 88</p>
         </div>
         <div style="display: flex; align-items: center; gap: 8px;">
           <svg viewBox="0 0 20 20" aria-hidden="true" style="width: 16px; height: 16px;" fill="none" stroke="#4A6B2A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"></path></svg>
@@ -1021,11 +1021,10 @@ function init_whats_app_modal() {
     <div style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 1;">
       <div class="m-stack" style="display: grid; grid-template-columns: 1.35fr 1fr; gap: 48px; align-items: end;" data-reveal="">
         <div>
-          <p style="font-size: 13px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #63736F;">Over ons</p>
-          <h1 style="margin-top: 18px; font-size: 62px; line-height: 1.04; letter-spacing: -0.035em; font-weight: 900; color: #0E2D30; text-wrap: balance;">Vastgoedbeheer uit het traditionele jasje.</h1>
+          <h1 style="font-size: 62px; line-height: 1.04; letter-spacing: -0.035em; font-weight: 900; color: #0E2D30; text-wrap: balance;">Vastgoedbeheer uit het traditionele jasje.</h1>
         </div>
         <div style="padding-bottom: 6px;">
-          <p style="font-size: 18px; line-height: 1.6; color: #63736F;">Wij vinden dat vastgoedbeheer net zo eenvoudig moet zijn als een moderne digitale dienst. Persoonlijk waar het telt, slim waar het kan.</p>
+          <p style="font-size: 18px; line-height: 1.6; color: #63736F;">Wij zijn een vastgoedbeheerder die samen met een autonoom systeem werkt. Dat maakt het beheer sneller, beter en kostenefficiënter, en het blijft persoonlijk waar het telt.</p>
           <div style="display: flex; align-items: center; gap: 12px; margin-top: 24px; flex-wrap: wrap;">
             <a href="contact.html" style="display: inline-flex; align-items: center; gap: 10px; background: #0E2D30; color: #ffffff; font-size: 16px; font-weight: 700; padding: 14px 24px; border-radius: 999px;" style-hover="background: #16383B; color: #ffffff;">Plan een gesprek<svg viewBox="0 0 16 16" aria-hidden="true" style="width: 15px; height: 15px;" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8h11"></path><path d="M9 3.5L13.5 8 9 12.5"></path></svg></a>
             <a href="diensten.html" style="display: inline-flex; align-items: center; background: #ffffff; color: #0E2D30; font-size: 16px; font-weight: 700; padding: 13px 24px; border-radius: 999px;" style-hover="border-color: #0E2D30; color: #0E2D30;">Onze diensten</a>
@@ -1040,12 +1039,11 @@ function init_whats_app_modal() {
 
   <section style="padding: 80px 24px;">
     <div class="m-stack" style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;">
-      <img fetchpriority="high" decoding="async" class="m-photo" data-parallax="0.07" src="assets/img/csn7hx1hha0g8_hgjg.jpg" alt="Prop3rty aan de Amsterdamse gracht" style="width: 100%; aspect-ratio: 9 / 11; object-fit: cover; border-radius: 24px; display: block;" data-reveal="">
+      <img fetchpriority="high" decoding="async" class="m-photo" data-parallax="0.07" src="assets/img/z2u7d0_1g06.jpg" alt="Prop3rty aan de Amsterdamse gracht" style="width: 100%; aspect-ratio: 9 / 11; object-fit: cover; border-radius: 24px; display: block;" data-reveal="">
       <div data-reveal="80" data-anim="right">
-        <p style="font-size: 13px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #63736F;">Waarom Prop3rty bestaat</p>
-        <h2 style="font-size: 42px; line-height: 1.14; letter-spacing: -0.03em; font-weight: 900; color: #0E2D30; margin-top: 14px;">Beheer voelde te vaak traag, onpersoonlijk en ondoorzichtig.</h2>
+        <h2 style="font-size: 42px; line-height: 1.14; letter-spacing: -0.03em; font-weight: 900; color: #0E2D30; ">Beheer voelde te vaak traag, onpersoonlijk en ondoorzichtig.</h2>
         <p style="font-size: 17px; line-height: 1.65; color: #63736F; margin-top: 16px;">Verhuurders hadden het gevoel dat er niet vanuit hun belang werd gehandeld. Huurders voelden zich niet gehoord. Dat kan anders, vonden wij: transparant, toegankelijk en menselijk, voor beide partijen.</p>
-        <p style="font-size: 17px; line-height: 1.65; color: #63736F; margin-top: 12px;">Daarom combineren we een modern platform met een vast team dat je bij naam kent. Eigenaren krijgen grip op hun portefeuille, huurders krijgen snelle en duidelijke oplossingen. En wij beloven wat we waarmaken: binnen 24 uur een oplossing aangeboden.</p>
+        <p style="font-size: 17px; line-height: 1.65; color: #63736F; margin-top: 12px;">Daarom werkt ons vaste team met een autonoom systeem dat een groot deel van het beheer automatiseert. Eigenaren houden volledige controle en zien hun rendement stijgen, huurders krijgen sneller een oplossing. En wij beloven wat we waarmaken: binnen 24 uur een oplossing aangeboden.</p>
         <a href="diensten.html" style="display: inline-flex; margin-top: 28px; background: #0E2D30; color: #ffffff; font-size: 16px; font-weight: 700; padding: 15px 26px; border-radius: 999px;" style-hover="background: #16383B; color: #ffffff;">Bekijk wat we doen</a>
       </div>
     </div>
@@ -1075,23 +1073,22 @@ function init_whats_app_modal() {
     <div style="max-width: 1200px; margin: 0 auto;">
       <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; flex-wrap: wrap;" data-reveal="">
         <div style="max-width: 26em;">
-          <p style="font-size: 13px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #63736F;">Het team</p>
-          <h2 style="font-size: 44px; line-height: 1.1; letter-spacing: -0.03em; font-weight: 900; color: #0E2D30; margin-top: 14px;">Eén vast team, dat je bij naam kent</h2>
+          <h2 style="font-size: 44px; line-height: 1.1; letter-spacing: -0.03em; font-weight: 900; color: #0E2D30; ">Eén vast team, dat je bij naam kent</h2>
         </div>
         <p style="max-width: 26em; font-size: 17px; line-height: 1.6; color: #63736F;">Achttien beheerders, opzichters en vakmensen. Geen callcenter, geen doorverwijzingen: je spreekt altijd iemand die jouw panden kent.</p>
       </div>
       <div data-momentum-hover-init="" style="display: flex; justify-content: center; align-items: flex-start; gap: 6px; margin-top: 56px; flex-wrap: wrap; padding: 56px 0 72px;" data-reveal="">
         <div data-momentum-hover-element="" style="width: 250px; margin-top: 26px; position: relative;">
-          <div data-momentum-hover-target="" style="position: relative; width: 250px; border-radius: 24px; overflow: hidden; aspect-ratio: 3 / 4; background: #E2E8DE; box-shadow: 0 22px 44px rgba(14,45,48,0.16);  transform: rotate(-4deg);"><img loading="lazy" decoding="async" src="assets/img/1dlakd8232ko3_43yg.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;"><span style="position: absolute; left: 18px; bottom: 16px; right: 18px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.4);">Technisch beheer</span></div>
+          <div data-momentum-hover-target="" style="position: relative; width: 250px; border-radius: 24px; overflow: hidden; aspect-ratio: 3 / 4; background: #E2E8DE; box-shadow: 0 22px 44px rgba(14,45,48,0.16);  transform: rotate(-4deg);"><img loading="lazy" decoding="async" src="assets/img/14gh24s_1trx.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;"><span style="position: absolute; left: 18px; bottom: 16px; right: 18px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.4);">Technisch beheer</span></div>
         </div>
         <div data-momentum-hover-element="" style="width: 250px; margin-top: 0px; position: relative;">
-          <div data-momentum-hover-target="" style="position: relative; width: 250px; border-radius: 24px; overflow: hidden; aspect-ratio: 3 / 4; background: #E2E8DE; box-shadow: 0 22px 44px rgba(14,45,48,0.16);  transform: rotate(2deg);"><img loading="lazy" decoding="async" src="assets/img/1uclu63rv2nfq_4cpk.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;"><span style="position: absolute; left: 18px; bottom: 16px; right: 18px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.4);">Relatiebeheer</span></div>
+          <div data-momentum-hover-target="" style="position: relative; width: 250px; border-radius: 24px; overflow: hidden; aspect-ratio: 3 / 4; background: #E2E8DE; box-shadow: 0 22px 44px rgba(14,45,48,0.16);  transform: rotate(2deg);"><img loading="lazy" decoding="async" src="assets/img/ly3qh0_bdij.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;"><span style="position: absolute; left: 18px; bottom: 16px; right: 18px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.4);">Relatiebeheer</span></div>
         </div>
         <div data-momentum-hover-element="" style="width: 250px; margin-top: 34px; position: relative;">
-          <div data-momentum-hover-target="" style="position: relative; width: 250px; border-radius: 24px; overflow: hidden; aspect-ratio: 3 / 4; background: #E2E8DE; box-shadow: 0 22px 44px rgba(14,45,48,0.16);  transform: rotate(-2deg);"><img loading="lazy" decoding="async" src="assets/img/pes4gx16y3rqj_42pk.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;"><span style="position: absolute; left: 18px; bottom: 16px; right: 18px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.4);">Commercieel beheer</span></div>
+          <div data-momentum-hover-target="" style="position: relative; width: 250px; border-radius: 24px; overflow: hidden; aspect-ratio: 3 / 4; background: #E2E8DE; box-shadow: 0 22px 44px rgba(14,45,48,0.16);  transform: rotate(-2deg);"><img loading="lazy" decoding="async" src="assets/img/1w2anky_xxs8.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;"><span style="position: absolute; left: 18px; bottom: 16px; right: 18px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.4);">Commercieel beheer</span></div>
         </div>
         <div data-momentum-hover-element="" style="width: 250px; margin-top: 8px; position: relative;">
-          <div data-momentum-hover-target="" style="position: relative; width: 250px; border-radius: 24px; overflow: hidden; aspect-ratio: 3 / 4; background: #E2E8DE; box-shadow: 0 22px 44px rgba(14,45,48,0.16);  transform: rotate(5deg);"><img loading="lazy" decoding="async" src="assets/img/1ckrk0jeu8g3x_cy3o.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;"><span style="position: absolute; left: 18px; bottom: 16px; right: 18px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.4);">Verhuur &amp; bezichtigingen</span></div>
+          <div data-momentum-hover-target="" style="position: relative; width: 250px; border-radius: 24px; overflow: hidden; aspect-ratio: 3 / 4; background: #E2E8DE; box-shadow: 0 22px 44px rgba(14,45,48,0.16);  transform: rotate(5deg);"><img loading="lazy" decoding="async" src="assets/img/gkckyr_anlx.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;"><span style="position: absolute; left: 18px; bottom: 16px; right: 18px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.4);">Verhuur &amp; bezichtigingen</span></div>
         </div>
       </div>
       <p style="text-align: center; font-size: 14px; color: #63736F; margin-top: 6px;">Beweeg er met je muis langs.</p>
@@ -1152,21 +1149,20 @@ function init_whats_app_modal() {
         <p style="max-width: 26em; font-size: 16px; line-height: 1.6; color: #63736F;">Goed beheer merk je niet. Huurders die zich thuis voelen, blijven langer, en dat zie jij terug in je rendement.</p>
       </div>
       <div class="m-cols" style="display: grid; grid-template-columns: 1fr 1fr 1.4fr; gap: 24px; margin-top: 44px;">
-        <div data-reveal=""><div class="fx-zoom" style="position: relative; border-radius: 24px; overflow: hidden; aspect-ratio: 3 / 4; background: #E2E8DE;"><img loading="lazy" decoding="async" src="assets/img/1rnui4hzbwr00_3puw.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;"><div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(14,45,48,0) 60%, rgba(14,45,48,0.5) 100%);"></div><p style="position: absolute; left: 20px; right: 20px; bottom: 18px; font-size: 15px; font-weight: 700; color: #ffffff;">Zorgeloos wonen, jaar na jaar</p></div></div>
-        <div data-reveal="80"><div class="fx-zoom" style="position: relative; border-radius: 24px; overflow: hidden; aspect-ratio: 3 / 4; background: #E2E8DE;"><img loading="lazy" decoding="async" src="assets/img/1iv1x0t1bjy1a9_6cc4.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;"><div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(14,45,48,0) 60%, rgba(14,45,48,0.5) 100%);"></div><p style="position: absolute; left: 20px; right: 20px; bottom: 18px; font-size: 15px; font-weight: 700; color: #ffffff;">Een fijne buurt om op te groeien</p></div></div>
-        <div data-reveal="160"><div class="fx-zoom" style="position: relative; border-radius: 24px; overflow: hidden; aspect-ratio: 4 / 3.05; background: #E2E8DE;"><img loading="lazy" decoding="async" src="assets/img/28fbpqs4beeh_79qw.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;"><div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(14,45,48,0) 60%, rgba(14,45,48,0.5) 100%);"></div><p style="position: absolute; left: 20px; right: 20px; bottom: 18px; font-size: 15px; font-weight: 700; color: #ffffff;">Thuis is waar je je kunt ontspannen</p></div></div>
+        <div data-reveal=""><div class="fx-zoom" style="position: relative; border-radius: 24px; overflow: hidden; aspect-ratio: 3 / 4; background: #E2E8DE;"><img loading="lazy" decoding="async" src="assets/img/erqn5e_1e6x.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;"><div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(14,45,48,0) 60%, rgba(14,45,48,0.5) 100%);"></div><p style="position: absolute; left: 20px; right: 20px; bottom: 18px; font-size: 15px; font-weight: 700; color: #ffffff;">Zorgeloos wonen, jaar na jaar</p></div></div>
+        <div data-reveal="80"><div class="fx-zoom" style="position: relative; border-radius: 24px; overflow: hidden; aspect-ratio: 3 / 4; background: #E2E8DE;"><img loading="lazy" decoding="async" src="assets/img/178ty9j_u1ic.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;"><div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(14,45,48,0) 60%, rgba(14,45,48,0.5) 100%);"></div><p style="position: absolute; left: 20px; right: 20px; bottom: 18px; font-size: 15px; font-weight: 700; color: #ffffff;">Een fijne buurt om op te groeien</p></div></div>
+        <div data-reveal="160"><div class="fx-zoom" style="position: relative; border-radius: 24px; overflow: hidden; aspect-ratio: 4 / 3.05; background: #E2E8DE;"><img loading="lazy" decoding="async" src="assets/img/15j44z3_jwed.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;"><div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(14,45,48,0) 60%, rgba(14,45,48,0.5) 100%);"></div><p style="position: absolute; left: 20px; right: 20px; bottom: 18px; font-size: 15px; font-weight: 700; color: #ffffff;">Thuis is waar je je kunt ontspannen</p></div></div>
       </div>
     </div>
   </section>
   <section style="padding: 80px 24px;">
     <div style="max-width: 1200px; margin: 0 auto; position: relative; border-radius: 36px; overflow: hidden; background: #0E2D30;" data-reveal="">
-      <img loading="lazy" decoding="async" src="assets/img/16symvsy5kdhh_jumw.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.5;">
+      <img loading="lazy" decoding="async" src="assets/img/1uqhb1v_1esu.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.5;">
       <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(14,45,48,0.55) 0%, rgba(14,45,48,0.25) 45%, rgba(14,45,48,0.75) 100%);"></div>
       <div style="position: relative; z-index: 1; text-align: center; padding: 110px 24px 96px;">
-        <p style="font-size: 13px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #CEFF8A;">Waarom we bestaan</p>
-        <h2 style="font-size: 54px; line-height: 1.06; letter-spacing: -0.035em; font-weight: 900; color: #ffffff; margin-top: 18px; text-wrap: balance;">Vastgoedbeheer is mensenwerk.</h2>
+        <h2 style="font-size: 54px; line-height: 1.06; letter-spacing: -0.035em; font-weight: 900; color: #ffffff; text-wrap: balance;">Vastgoedbeheer is mensenwerk.</h2>
         <p style="font-size: 18px; line-height: 1.65; color: rgba(255,255,255,0.85); margin-top: 18px; max-width: 34em; margin-left: auto; margin-right: auto;">Techniek maakt het inzichtelijk. Mensen maken het persoonlijk. Daarom lopen wij nog gewoon de stad in, terwijl het portaal thuis voor jou bijhoudt wat er gebeurt.</p>
-        <div class="fx-zoom" style="width: min(440px, 84%); margin: 48px auto 0; border-radius: 28px; overflow: hidden; aspect-ratio: 4 / 3; box-shadow: 0 32px 64px rgba(0,0,0,0.35);" data-parallax="0.05"><img loading="lazy" decoding="async" src="assets/img/1gsq2exwg4d09_3nu0.jpg" alt="" style="width: 100%; height: 100%; object-fit: cover;"></div>
+        <div class="fx-zoom" style="width: min(440px, 84%); margin: 48px auto 0; border-radius: 28px; overflow: hidden; aspect-ratio: 4 / 3; box-shadow: 0 32px 64px rgba(0,0,0,0.35);" data-parallax="0.05"><img loading="lazy" decoding="async" src="assets/img/r75hre_owgb.jpg" alt="" style="width: 100%; height: 100%; object-fit: cover;"></div>
       </div>
     </div>
   </section>
@@ -1203,8 +1199,7 @@ function init_whats_app_modal() {
     </div>
     <div style="position: relative; z-index: 1; max-width: 1200px; margin: 0 auto;">
       <div style="text-align: center; padding: 120px 0 110px;">
-        <p style="font-size: 13px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #CEFF8A;" data-reveal="">De Prop3rty update</p>
-        <h2 style="font-size: 46px; line-height: 1.1; letter-spacing: -0.03em; font-weight: 900; color: #ffffff; margin: 18px auto 0; max-width: 14em; text-wrap: balance;" data-reveal="60">Slimmer verhuren begint met beter inzicht.</h2>
+        <h2 style="font-size: 46px; line-height: 1.1; letter-spacing: -0.03em; font-weight: 900; color: #ffffff; margin: 0 auto; max-width: 14em; text-wrap: balance;" data-reveal="60">Slimmer verhuren begint met beter inzicht.</h2>
         <div style="display: flex; align-items: center; gap: 8px; max-width: 460px; margin: 32px auto 0; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 999px; padding: 6px 6px 6px 22px; backdrop-filter: blur(10px);" data-reveal="120">
           <input type="email" placeholder="Je e-mailadres" style="flex: 1; min-width: 0; font-family: 'Satoshi', sans-serif; font-size: 15px; color: #ffffff; background: transparent; border: none; outline: none;">
           <button type="button" style="font-family: 'Satoshi', sans-serif; background: #CEFF8A; color: #0E2D30; font-size: 15px; font-weight: 700; padding: 13px 24px; border: none; border-radius: 999px; cursor: pointer; flex: none; transition: background .3s;" style-hover="background: #ffffff; color: #0E2D30;">Aanmelden</button>

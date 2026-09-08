@@ -466,7 +466,7 @@
     v.setAttribute('muted',''); v.setAttribute('playsinline','');
     if(window.Hls && Hls.isSupported()){
       if(v._hls){ try{ v._hls.destroy(); }catch(e){} }
-      var h=new Hls({maxBufferLength:20,capLevelToPlayerSize:false,abrEwmaDefaultEstimate:8000000,startFragPrefetch:true});
+      var h=new Hls({preferManagedMediaSource:false,maxBufferLength:20,capLevelToPlayerSize:false,abrEwmaDefaultEstimate:8000000,startFragPrefetch:true});
       h.on(Hls.Events.MANIFEST_PARSED,function(){ if(!h.levels.length) return; var top=h.levels.reduce(function(b,l,i){ return (l.height||0) > (h.levels[b].height||0) ? i : b; },0); var quick=0; h.levels.forEach(function(l,i){ if((l.height||0)<=480 && (l.height||0)>(h.levels[quick].height||0)) quick=i; }); h.startLevel=quick; v._topLevel=top; var up=function(){ try{ h.loadLevel=top; h.nextLevel=top; }catch(e){} v.removeEventListener("playing",up); }; v.addEventListener("playing",up); });
       v._hls=h;
       h.on(Hls.Events.MEDIA_ATTACHED,function(){ h.loadSource(src); });
@@ -489,6 +489,24 @@
   }
   setInterval(sweep, 700);
   sweep();
+  function manual(){
+    document.querySelectorAll('video[data-hls-manual]').forEach(function(v){
+      if(v._manual) return;
+      var src=v.getAttribute('data-hls-manual'); if(!src) return;
+      v._manual=1; v.muted=false; v.volume=1; v.loop=false;
+      if(window.Hls && Hls.isSupported()){
+        var h=new Hls({preferManagedMediaSource:false,maxBufferLength:30}); v._hls=h;
+        h.on(Hls.Events.MEDIA_ATTACHED,function(){ h.loadSource(src); });
+        h.attachMedia(v);
+      } else if(v.canPlayType('application/vnd.apple.mpegurl')){ v.src=src; } else return;
+      var wrap=v.closest('[data-manual-video-wrap]'); var cover=wrap&&wrap.querySelector('[data-manual-video-cover]');
+      var toggle=function(){ if(v.paused){ v.muted=false; v.play().catch(function(){}); } else { v.pause(); } };
+      if(wrap) wrap.addEventListener('click',function(e){ if(e.target===v && v.controls) return; toggle(); });
+      v.addEventListener('play',function(){ v.controls=true; if(cover){ cover.style.opacity='0'; cover.style.pointerEvents='none'; } });
+      v.addEventListener('pause',function(){ if(cover){ cover.style.opacity='1'; cover.style.pointerEvents=''; } });
+    });
+  }
+  setInterval(manual, 700); manual();
   window.addEventListener('pointerdown',function(){ document.querySelectorAll('video[data-hls]').forEach(function(x){x.muted=true; x.volume=0; if(x.paused&&x.play) x.play().catch(function(){});}); },{passive:true});
 })();
 </script>
@@ -968,14 +986,14 @@ function init_whats_app_modal() {
 <script>
 (function () {
   function force_mute_videos() {
-    document.querySelectorAll('video').forEach(function (v) {
+    document.querySelectorAll('video:not([data-demo-video]):not([data-hls-manual])').forEach(function (v) {
       v.muted = true; v.defaultMuted = true; v.volume = 0;
       if (!v.hasAttribute('muted')) v.setAttribute('muted', '');
     });
   }
   setInterval(force_mute_videos, 500);
   document.addEventListener('play', force_mute_videos, true);
-  document.addEventListener('volumechange', function (e) { if (e.target && e.target.tagName === 'VIDEO' && !e.target.muted) { e.target.muted = true; e.target.volume = 0; } }, true);
+  document.addEventListener('volumechange', function (e) { if (e.target && e.target.tagName === 'VIDEO' && !e.target.muted && !e.target.hasAttribute('data-demo-video') && !e.target.hasAttribute('data-hls-manual')) { e.target.muted = true; e.target.volume = 0; } }, true);
   force_mute_videos();
 })();
 </script>
@@ -1273,7 +1291,7 @@ function init_whats_app_modal() {
     <div style="display: flex; align-items: center; gap: 32px; flex-wrap: wrap;">
       <div style="display: flex; align-items: center; gap: 8px;">
         <svg viewBox="0 0 20 20" aria-hidden="true" style="width: 16px; height: 16px;" fill="none" stroke="#63736F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3.5h3l1.5 4-2 1.5a11 11 0 0 0 4.5 4.5l1.5-2 4 1.5v3a1.5 1.5 0 0 1-1.6 1.5C8.6 17 3 11.4 2.5 5.1A1.5 1.5 0 0 1 4 3.5Z"></path></svg>
-        <p style="font-size: 14px; font-weight: 500; color: #0E2D30;">020 – 324 21 88</p>
+        <p style="font-size: 14px; font-weight: 500; color: #0E2D30;">020 - 324 21 88</p>
       </div>
       <div style="display: flex; align-items: center; gap: 8px;">
         <svg viewBox="0 0 20 20" aria-hidden="true" style="width: 16px; height: 16px;" fill="none" stroke="#4A6B2A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"></path></svg>
@@ -1331,11 +1349,10 @@ function init_whats_app_modal() {
     <div style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 1;">
       <div class="m-stack" style="display: grid; grid-template-columns: 1.35fr 1fr; gap: 48px; align-items: end;" data-reveal="">
         <div>
-          <p style="font-size: 13px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #63736F;">Platform</p>
-          <h1 style="margin-top: 18px; font-size: 62px; line-height: 1.04; letter-spacing: -0.035em; font-weight: 900; color: #0E2D30; text-wrap: balance;">Eén portaal waarin alles samenkomt.</h1>
+          <h1 style="font-size: 62px; line-height: 1.04; letter-spacing: -0.035em; font-weight: 900; color: #0E2D30; text-wrap: balance;">Eén portaal waarin alles samenkomt.</h1>
         </div>
         <div style="padding-bottom: 6px;">
-          <p style="font-size: 18px; line-height: 1.6; color: #63736F;">Documenten, huurstromen, onderhoud en prestaties, realtime bij elkaar. Voor eigenaren én huurders, op elk apparaat.</p>
+          <p style="font-size: 18px; line-height: 1.6; color: #63736F;">Meldingen, onderhoud, kosten, documenten en prestaties, realtime bij elkaar. Volledige controle binnen één klik, voor eigenaren én huurders, op elk apparaat.</p>
           <div style="display: flex; align-items: center; gap: 12px; margin-top: 24px; flex-wrap: wrap;">
             <a href="portaal.html" style="display: inline-flex; align-items: center; gap: 10px; background: #0E2D30; color: #ffffff; font-size: 16px; font-weight: 700; padding: 14px 24px; border-radius: 999px;" style-hover="background: #16383B; color: #ffffff;">Bekijk het portaal<svg viewBox="0 0 16 16" aria-hidden="true" style="width: 15px; height: 15px;" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8h11"></path><path d="M9 3.5L13.5 8 9 12.5"></path></svg></a>
             <a href="contact.html" style="display: inline-flex; align-items: center; background: #ffffff; color: #0E2D30; font-size: 16px; font-weight: 700; padding: 13px 24px; border-radius: 999px;" style-hover="border-color: #0E2D30; color: #0E2D30;">Plan een gesprek</a>
@@ -1383,10 +1400,23 @@ function init_whats_app_modal() {
     </div>
   </section>
 
+  <section style="padding: 8px 24px 80px;">
+    <div style="max-width: 1200px; margin: 0 auto;" data-reveal="">
+      <div data-manual-video-wrap="" style="position: relative; border-radius: 32px; overflow: hidden; aspect-ratio: 16 / 9; background: #0E2D30; box-shadow: 0 30px 70px rgba(14,45,48,0.22); cursor: pointer;">
+        <video data-hls-manual="https://vz-45716865-4aa.b-cdn.net/cdcac228-2aa1-4ecc-bc53-9d629d92c6cd/playlist.m3u8" playsinline="" preload="metadata" aria-label="Zo werkt het Prop3rty-portaal" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;"></video>
+        <div data-manual-video-cover="" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: linear-gradient(180deg, rgba(14,45,48,0.05) 0%, rgba(14,45,48,0.35) 100%); transition: opacity 0.35s ease;">
+          <div style="display: inline-flex; align-items: center; gap: 12px; background: #ffffff; border-radius: 999px; padding: 16px 26px; box-shadow: 0 16px 36px rgba(14,45,48,0.28);">
+            <span style="font-size: 17px; font-weight: 700; color: #0E2D30;">Zo werkt het</span>
+            <svg viewBox="0 0 12 14" aria-hidden="true" style="width: 12px; height: 14px;"><path d="M1 1l10 6-10 6z" fill="#0E2D30"></path></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section style="padding: 80px 24px;">
     <div style="max-width: 720px; margin: 0 auto; text-align: center;" data-reveal="">
-      <p style="font-size: 13px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #63736F;">Zo werkt het</p>
-      <h2 style="font-size: 46px; line-height: 1.08; letter-spacing: -0.03em; font-weight: 900; color: #0E2D30; margin-top: 14px;">Alles wat er speelt, volg je live.</h2>
+      <h2 style="font-size: 46px; line-height: 1.08; letter-spacing: -0.03em; font-weight: 900; color: #0E2D30; ">Alles wat er speelt, volg je live.</h2>
     </div>
   </section>
   <section style="padding: 8px 24px 80px;">
@@ -1505,7 +1535,7 @@ function init_whats_app_modal() {
     <div style="max-width: 1200px; margin: 0 auto;">
       <div style="max-width: 620px; margin: 0 auto; text-align: center;" data-reveal="">
         <h2 style="font-size: 44px; line-height: 1.12; letter-spacing: -0.03em; font-weight: 900; color: #0E2D30;">Wat je vandaag al in handen hebt</h2>
-        <p style="font-size: 18px; color: #63736F; margin-top: 14px;">Simpel genoeg voor jong en oud, slim genoeg om je écht werk uit handen te nemen.</p>
+        <p style="font-size: 18px; color: #63736F; margin-top: 14px;">Technologie is niet het doel. Het is de reden dat we sneller, beter en kostenefficiënter beheren.</p>
       </div>
       <div class="m-cols m-swipe" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px;">
         <div style="background: #ffffff; border: 1px solid #E2E8DE; border-radius: 24px; padding: 28px;" data-reveal="">
@@ -1546,13 +1576,13 @@ function init_whats_app_modal() {
     <div style="max-width: 1200px; margin: 0 auto;">
       <div class="m-stack" style="display: grid; grid-template-columns: 1.35fr 1fr; gap: 24px; align-items: stretch;">
         <div class="fx-zoom" style="position: relative; border-radius: 32px; overflow: hidden; min-height: 420px; background: #E2E8DE;" data-reveal="">
-          <img fetchpriority="high" decoding="async" src="assets/img/28fbpqs4beeh_79qw.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+          <img fetchpriority="high" decoding="async" src="assets/img/15j44z3_jwed.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
           <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(14,45,48,0) 50%, rgba(14,45,48,0.6) 100%);"></div>
           <p style="position: absolute; left: 28px; right: 28px; bottom: 24px; font-size: 20px; font-weight: 700; color: #ffffff; max-width: 22em;">Terwijl jij het portaal checkt, genieten je huurders gewoon van hun huis.</p>
         </div>
         <div style="display: flex; flex-direction: column; gap: 24px;">
           <div class="fx-zoom" style="position: relative; border-radius: 32px; overflow: hidden; flex: 1; min-height: 198px; background: #E2E8DE;" data-reveal="80">
-            <img loading="lazy" decoding="async" src="assets/img/1rnui4hzbwr00_3puw.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%;">
+            <img loading="lazy" decoding="async" src="assets/img/erqn5e_1e6x.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%;">
           </div>
           <div style="border-radius: 32px; background: radial-gradient(120% 120% at 20% 0%, rgba(206,255,138,0.55) 0%, rgba(233,237,229,0.9) 70%); padding: 30px 32px;" data-reveal="160">
             <p style="font-size: 40px; font-weight: 900; letter-spacing: -0.03em; color: #0E2D30;">8,6</p>
@@ -1565,8 +1595,7 @@ function init_whats_app_modal() {
   <section style="padding: 80px 24px;">
     <div style="max-width: 1200px; margin: 0 auto;">
       <div style="max-width: 620px; margin: 0 auto 52px; text-align: center;" data-reveal="">
-        <p style="font-size: 13px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #63736F;">In het portaal</p>
-        <h2 style="font-size: 44px; line-height: 1.1; letter-spacing: -0.03em; font-weight: 900; color: #0E2D30; margin-top: 14px;">Functies die je moet kennen</h2>
+        <h2 style="font-size: 44px; line-height: 1.1; letter-spacing: -0.03em; font-weight: 900; color: #0E2D30; ">Functies die je moet kennen</h2>
         <p style="font-size: 17px; line-height: 1.6; color: #63736F; margin-top: 14px;">Dit zijn de vijf dingen die eigenaren het vaakst gebruiken.</p>
       </div>
       <div data-bouncy-tabs-init="" class="bouncy-tabs" data-reveal="80">
@@ -1630,8 +1659,7 @@ function init_whats_app_modal() {
   <section style="padding: 80px 24px;">
     <div style="max-width: 1200px; margin: 0 auto;">
       <div style="text-align: center;" data-reveal="">
-        <p style="font-size: 13px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #63736F;">Live binnen 24 uur</p>
-        <h2 style="font-size: 44px; line-height: 1.12; letter-spacing: -0.03em; font-weight: 900; color: #0E2D30; margin-top: 14px;">Zo werkt het in de praktijk</h2>
+        <h2 style="font-size: 44px; line-height: 1.12; letter-spacing: -0.03em; font-weight: 900; color: #0E2D30; ">Zo werkt het in de praktijk</h2>
       </div>
       <div class="m-cols m-swipe" style="display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid #E2E8DE; margin-top: 56px;">
         <div style="padding: 40px 32px 0; border-right: 1px solid #E2E8DE;" data-reveal="">
@@ -1742,8 +1770,7 @@ function init_whats_app_modal() {
     <div class="m-cta" style="max-width: 1200px; margin: 0 auto; background: #0E2D30; border-radius: 36px; padding: 56px;">
       <div class="m-stack" style="display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 48px; align-items: center;">
         <div data-reveal="">
-          <p style="font-size: 13px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #86999A;">AI-assistent</p>
-          <h2 style="font-size: 44px; line-height: 1.1; letter-spacing: -0.035em; font-weight: 900; color: #ffffff; margin-top: 18px; text-wrap: balance;">Slim, dankzij technologie die voor je werkt.</h2>
+          <h2 style="font-size: 44px; line-height: 1.1; letter-spacing: -0.035em; font-weight: 900; color: #ffffff; text-wrap: balance;">Slim, dankzij technologie die voor je werkt.</h2>
           <p style="font-size: 18px; line-height: 1.7; color: #A9BCBA; margin-top: 18px;">De Prop3rty-assistent beantwoordt vragen over je portefeuille, zet processen in gang en signaleert problemen voordat ze ontstaan. Dag en nacht, in gewone taal.</p>
           <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 26px;">
             <div style="display: flex; align-items: center; gap: 12px;"><svg viewBox="0 0 20 20" aria-hidden="true" style="width: 20px; height: 20px; flex: none;"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#CEFF8A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><p style="font-size: 16px; font-weight: 500; color: #ffffff;">Antwoorden op vragen over panden, huur en documenten</p></div>
@@ -1757,7 +1784,7 @@ function init_whats_app_modal() {
           <div data-depth-tiles-list="" class="depth-tiles__list">
           <div data-depth-tiles-item="" class="depth-tiles__item">
             <div class="demo-card">
-              <img src="assets/img/jq4jtttduqxf_9x90.jpg" loading="lazy" alt="" class="cover-image">
+              <img src="assets/img/1yr7m08_jc5u.jpg" loading="lazy" alt="" class="cover-image">
               <div class="demo-card__info">
                 <div class="demo-card__dot"></div>
                 <p class="demo-card__p">01 / Meldingen</p>
@@ -1766,7 +1793,7 @@ function init_whats_app_modal() {
           </div>
           <div data-depth-tiles-item="" class="depth-tiles__item">
             <div class="demo-card">
-              <img src="assets/img/1ckrk0jeu8g3x_cy3o.jpg" loading="lazy" alt="" class="cover-image">
+              <img src="assets/img/gkckyr_anlx.jpg" loading="lazy" alt="" class="cover-image">
               <div class="demo-card__info">
                 <div class="demo-card__dot"></div>
                 <p class="demo-card__p">02 / Documenten</p>
@@ -1775,7 +1802,7 @@ function init_whats_app_modal() {
           </div>
           <div data-depth-tiles-item="" class="depth-tiles__item">
             <div class="demo-card">
-              <img src="assets/img/1gsq2exwg4d09_3nu0.jpg" loading="lazy" alt="" class="cover-image">
+              <img src="assets/img/r75hre_owgb.jpg" loading="lazy" alt="" class="cover-image">
               <div class="demo-card__info">
                 <div class="demo-card__dot"></div>
                 <p class="demo-card__p">03 / Rapportages</p>
@@ -1784,7 +1811,7 @@ function init_whats_app_modal() {
           </div>
           <div data-depth-tiles-item="" class="depth-tiles__item">
             <div class="demo-card">
-              <img src="assets/img/haucii10657o6_7c64.jpg" loading="lazy" alt="" class="cover-image">
+              <img src="assets/img/mii9zx_c0up.jpg" loading="lazy" alt="" class="cover-image">
               <div class="demo-card__info">
                 <div class="demo-card__dot"></div>
                 <p class="demo-card__p">04 / Service</p>
@@ -1803,8 +1830,7 @@ function init_whats_app_modal() {
     <div style="max-width: 1200px; margin: 0 auto;">
       <div class="m-stack" style="display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start;">
         <div data-reveal="">
-          <p style="font-size: 13px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #63736F;">Roadmap</p>
-          <h2 style="font-size: 42px; line-height: 1.12; letter-spacing: -0.03em; font-weight: 900; color: #0E2D30; margin-top: 14px;">Waar we naartoe bouwen</h2>
+          <h2 style="font-size: 42px; line-height: 1.12; letter-spacing: -0.03em; font-weight: 900; color: #0E2D30; ">Waar we naartoe bouwen</h2>
           <p style="font-size: 17px; line-height: 1.65; color: #63736F; margin-top: 16px;">Prop3rty groeit uit tot een volledig digitaal vastgoedplatform. Elke maand komt er functionaliteit bij, en als klant krijg je die er gewoon bij, zonder meerprijs.</p>
           <a href="contact.html" style="display: inline-flex; margin-top: 28px; background: #0E2D30; color: #ffffff; font-size: 16px; font-weight: 700; padding: 15px 26px; border-radius: 999px;" style-hover="background: #16383B; color: #ffffff;">Denk mee als klant</a>
         </div>
@@ -1843,17 +1869,17 @@ function init_whats_app_modal() {
       </div>
       <div class="m-cols" style="display:grid;grid-template-columns:1.45fr 1fr;gap:20px;">
         <div class="fx-zoom" style="position:relative;border-radius:28px;overflow:hidden;background:#E2E8DE;min-height:520px;" data-reveal="">
-          <img loading="lazy" decoding="async" src="assets/img/16symvsy5kdhh_jumw.jpg" alt="Grachtenpand in Amsterdam" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;">
+          <img loading="lazy" decoding="async" src="assets/img/1uqhb1v_1esu.jpg" alt="Grachtenpand in Amsterdam" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;">
           <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,45,48,0) 55%,rgba(14,45,48,0.55) 100%);"></div>
           <p style="position:absolute;left:26px;right:26px;bottom:22px;font-size:18px;font-weight:700;color:#ffffff;max-width:20em;">Van grachtenpand tot appartementencomplex: alles in één overzicht.</p>
         </div>
         <div style="display:grid;grid-template-rows:1fr 1fr;gap:20px;">
           <div class="fx-zoom" style="position:relative;border-radius:28px;overflow:hidden;background:#E2E8DE;min-height:250px;" data-reveal="">
-          <img loading="lazy" decoding="async" src="assets/img/jq4jtttduqxf_9x90.jpg" alt="Beheerder op locatie" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;">
+          <img loading="lazy" decoding="async" src="assets/img/1yr7m08_jc5u.jpg" alt="Beheerder op locatie" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;">
           
         </div>
           <div class="fx-zoom" style="position:relative;border-radius:28px;overflow:hidden;background:#E2E8DE;min-height:250px;" data-reveal="">
-          <img loading="lazy" decoding="async" src="assets/img/1u8ee6ezcqs2y_7st0.jpg" alt="Sleuteloverdracht" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;">
+          <img loading="lazy" decoding="async" src="assets/img/n9aoni_2kqv.jpg" alt="Sleuteloverdracht" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;">
           
         </div>
         </div>
@@ -1913,8 +1939,7 @@ function init_whats_app_modal() {
     </div>
     <div style="position: relative; z-index: 1; max-width: 1200px; margin: 0 auto;">
       <div style="text-align: center; padding: 120px 0 110px;">
-        <p style="font-size: 13px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #CEFF8A;" data-reveal="">De Prop3rty update</p>
-        <h2 style="font-size: 46px; line-height: 1.1; letter-spacing: -0.03em; font-weight: 900; color: #ffffff; margin: 18px auto 0; max-width: 14em; text-wrap: balance;" data-reveal="60">Slimmer verhuren begint met beter inzicht.</h2>
+        <h2 style="font-size: 46px; line-height: 1.1; letter-spacing: -0.03em; font-weight: 900; color: #ffffff; margin: 0 auto; max-width: 14em; text-wrap: balance;" data-reveal="60">Slimmer verhuren begint met beter inzicht.</h2>
         <div style="display: flex; align-items: center; gap: 8px; max-width: 460px; margin: 32px auto 0; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 999px; padding: 6px 6px 6px 22px; backdrop-filter: blur(10px);" data-reveal="120">
           <input type="email" placeholder="Je e-mailadres" style="flex: 1; min-width: 0; font-family: 'Satoshi', sans-serif; font-size: 15px; color: #ffffff; background: transparent; border: none; outline: none;">
           <button type="button" style="font-family: 'Satoshi', sans-serif; background: #CEFF8A; color: #0E2D30; font-size: 15px; font-weight: 700; padding: 13px 24px; border: none; border-radius: 999px; cursor: pointer; flex: none; transition: background .3s;" style-hover="background: #ffffff; color: #0E2D30;">Aanmelden</button>
