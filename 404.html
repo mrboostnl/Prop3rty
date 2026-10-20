@@ -10,6 +10,13 @@
 <x-dc>
 <helmet>
 <style>
+  a, button, [role="button"], input[type="submit"], .whatsapp-modal__fab, #sob-wrap, #sob-wrap * { box-shadow: none !important; }
+  #sob-wrap svg { filter: none !important; }
+  @media (max-width: 767px) {
+    section:not(#top) { padding-top: 56px !important; padding-bottom: 56px !important; }
+    section[style*="100svh"]:not(#top) { min-height: 0 !important; }
+    [style*="padding: 120px 0 110px"] { padding-top: 0 !important; padding-bottom: 0 !important; }
+  }
   @font-face { font-family: 'Satoshi'; src: url(assets/fonts/satoshi-110d7f0_afg.otf) format('opentype'); font-weight: 300; font-display: swap; }
   @font-face { font-family: 'Satoshi'; src: url(assets/fonts/satoshi-k7cm0d_fsw.otf) format('opentype'); font-weight: 500; font-display: swap; }
   @font-face { font-family: 'Satoshi'; src: url(assets/fonts/satoshi-10alh2z_f3k.otf) format('opentype'); font-weight: 700; font-display: swap; }
@@ -508,6 +515,7 @@ function init_whats_app_modal() {
   // ---- enter (page load after a transition) ----
   var pending = null;
   try { pending = sessionStorage.getItem(KEY); sessionStorage.removeItem(KEY); } catch (e) {}
+  pending = null;
 
   function cover() {
     var o = parts(build());
@@ -557,7 +565,7 @@ function init_whats_app_modal() {
 
   // ---- leave (link click) ----
   function leave(href) {
-    if (busy) return; busy = true;
+    window.location.href = href; return;
     var o = parts(build());
     o.top.style.transform = 'scaleY(0)';
     o.bottom.style.transform = 'scaleY(1)';

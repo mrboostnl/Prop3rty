@@ -10,6 +10,13 @@
 <x-dc>
 <helmet>
 <style>
+  a, button, [role="button"], input[type="submit"], .whatsapp-modal__fab, #sob-wrap, #sob-wrap * { box-shadow: none !important; }
+  #sob-wrap svg { filter: none !important; }
+  @media (max-width: 767px) {
+    section:not(#top) { padding-top: 56px !important; padding-bottom: 56px !important; }
+    section[style*="100svh"]:not(#top) { min-height: 0 !important; }
+    [style*="padding: 120px 0 110px"] { padding-top: 0 !important; padding-bottom: 0 !important; }
+  }
   @font-face { font-family: 'Satoshi'; src: url(assets/fonts/satoshi-110d7f0_afg.otf) format('opentype'); font-weight: 300; font-display: swap; }
   @font-face { font-family: 'Satoshi'; src: url(assets/fonts/satoshi-k7cm0d_fsw.otf) format('opentype'); font-weight: 500; font-display: swap; }
   @font-face { font-family: 'Satoshi'; src: url(assets/fonts/satoshi-10alh2z_f3k.otf) format('opentype'); font-weight: 700; font-display: swap; }
@@ -357,6 +364,12 @@
     h2:not(.whatsapp-modal__h2):not(.testimonial-lines__h) { font-size: clamp(28px, 8.2vw, 34px) !important; line-height: 1.12 !important; }
     h1, h2 { overflow-wrap: break-word; hyphens: auto; }
   }
+  .lw-item { width: 25%; display: flex; }
+  .snd-btn { opacity: 0; }
+  .snd-wrap:hover .snd-btn, .snd-btn[data-on="1"], .snd-btn:focus-visible { opacity: 1; }
+  @media (hover: none) { .snd-btn { opacity: 1; } }
+  [data-logo-wall-list] [data-logo-wall-item]:nth-child(n+5) { display: none; }
+  @media (max-width: 767px) { .lw-item { width: 33.333%; } [data-logo-wall-list] [data-logo-wall-item]:nth-child(n+4) { display: none; } }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js"></script>
@@ -538,14 +551,14 @@ function init_whats_app_modal() {
 <script>
 (function () {
   function force_mute_videos() {
-    document.querySelectorAll('video:not([data-demo-video]):not([data-hls-manual])').forEach(function (v) {
-      v.muted = true; v.defaultMuted = true; v.volume = 0;
+    document.querySelectorAll('video:not([data-demo-video]):not([data-hls-manual])').forEach(function (v) { if (v._soundOn) return;
+      if (!v._soundOn) v.muted = true; if (!v._soundOn) v.defaultMuted = true; if (!v._soundOn) v.volume = 0;
       if (!v.hasAttribute('muted')) v.setAttribute('muted', '');
     });
   }
   (function(){var c=0,i=setInterval(function(){force_mute_videos();if(++c>20)clearInterval(i);},500);})();
   document.addEventListener('play', force_mute_videos, true);
-  document.addEventListener('volumechange', function (e) { if (e.target && e.target.tagName === 'VIDEO' && !e.target.muted && !e.target.hasAttribute('data-demo-video') && !e.target.hasAttribute('data-hls-manual')) { e.target.muted = true; e.target.volume = 0; } }, true);
+  document.addEventListener('volumechange', function (e) { if (e.target && e.target.tagName === 'VIDEO' && !e.target.muted && !e.target._soundOn && !e.target.hasAttribute('data-demo-video') && !e.target.hasAttribute('data-hls-manual')) { e.target.muted = true; e.target.volume = 0; } }, true);
   force_mute_videos();
 })();
 </script>
@@ -590,7 +603,7 @@ function init_whats_app_modal() {
 // Prop3rty page transition — Curved Wipe (adapted from Osmo Supply resource)
 (function () {
   var EASE = 'cubic-bezier(0.625, 0.05, 0, 1)';
-  var NAMES = ['index.html', 'landing-alt.html', 'diensten.html', 'platform.html', 'tarieven.html', 'over-ons.html', 'contact.html', 'portaal.html', '404.html'];
+  var NAMES = ['index.dc.html', 'Oude landingspagina.dc.html', 'Diensten.dc.html', 'Platform.dc.html', 'Tarieven.dc.html', 'Over ons.dc.html', 'Contact.dc.html', 'Prop3rty Portaal.dc.html', '404.dc.html'];
   var KEY = 'p3-transition';
   var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var busy = false;
@@ -652,6 +665,7 @@ function init_whats_app_modal() {
   // ---- enter (page load after a transition) ----
   var pending = null;
   try { pending = sessionStorage.getItem(KEY); sessionStorage.removeItem(KEY); } catch (e) {}
+  pending = null;
 
   function cover() {
     var o = parts(build());
@@ -701,7 +715,7 @@ function init_whats_app_modal() {
 
   // ---- leave (link click) ----
   function leave(href) {
-    if (busy) return; busy = true;
+    window.location.href = href; return;
     var o = parts(build());
     o.top.style.transform = 'scaleY(0)';
     o.bottom.style.transform = 'scaleY(1)';
@@ -781,13 +795,13 @@ function init_whats_app_modal() {
     '@media (max-width: 1040px) { #topbar { display: none !important; } #header-pill #menu-btn { display: none !important; } .hamburger-nav { top: 24px; right: 38px; } .hamburger-nav__bg { width: 44px; height: 44px; } .hamburger-nav__toggle { width: 44px; height: 44px; } #header-pill { justify-content: center !important; height: 64px !important; padding: 0 14px !important; } #header-pill svg[role="img"], #header-pill a > img { height: 34px !important; } #header-call { display: flex !important; } }'
   ].join('\n');
   var LINKS = [
-    ['Home', 'index.html'],
-    ['Diensten', 'diensten.html'],
-    ['Platform', 'platform.html'],
-    ['Tarieven', 'tarieven.html'],
-    ['Over ons', 'over-ons.html'],
-    ['Contact', 'contact.html'],
-    ['Mijn Prop3rty', 'portaal.html']
+    ['Home', 'index.dc.html'],
+    ['Diensten', 'Diensten.dc.html'],
+    ['Platform', 'Platform.dc.html'],
+    ['Tarieven', 'Tarieven.dc.html'],
+    ['Over ons', 'Over ons.dc.html'],
+    ['Contact', 'Contact.dc.html'],
+    ['Mijn Prop3rty', 'Prop3rty Portaal.dc.html']
   ];
   function build() {
     if (document.getElementById('scaling-nav')) return;
@@ -881,19 +895,19 @@ function init_whats_app_modal() {
   <header style="position: sticky; top: 0; z-index: 40; padding: 14px 24px 0;">
     <div id="header-pill" style="position: relative; max-width: 1200px; margin: 0 auto; padding: 0 14px 0 24px; height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 24px; background: rgba(255,255,255,0.68); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); border: 1px solid rgba(226,232,222,0.85); border-radius: 999px; box-shadow: 0 14px 40px rgba(14,45,48,0.08);">
       <a id="header-call" href="tel:0203242188" aria-label="Bel Prop3rty" style="display: none; align-items: center; justify-content: center; width: 44px; height: 44px; flex: none; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: #ECF1EA; border-radius: 999px;"><svg viewBox="0 0 20 20" aria-hidden="true" style="width: 19px; height: 19px;" fill="none" stroke="#0E2D30" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3.5h3l1.5 4-2 1.5a11 11 0 0 0 4.5 4.5l1.5-2 4 1.5v3a1.5 1.5 0 0 1-1.6 1.5C8.6 17 3 11.4 2.5 5.1A1.5 1.5 0 0 1 4 3.5Z"></path></svg></a>
-      <a href="index.html" style="display: flex; align-items: center; gap: 10px; color: #0E2D30;">
+      <a href="index.dc.html" style="display: flex; align-items: center; gap: 10px; color: #0E2D30;">
         <svg viewBox="85.77 234.68 439.63 143.62" role="img" aria-label="Prop3rty" style="height: 42px; width: auto; fill: #0E2D30;"><path d="M486.96,340.92l3.95-13.65h-8.26l-7.18-27.67v.02h-9.7v17.95h10.41v9.7h-22.62v-27.65h-1.08v1.44h-6.11c-1.31-.03-2.61.28-3.77.9-1.06.58-1.93,1.45-2.51,2.51-.62,1.16-.93,2.46-.9,3.77v19.03h-12.21v-11.02c-.39,1.39-.98,2.7-1.76,3.91-1.52,2.37-3.73,4.25-6.61,5.62-2.88,1.38-6.27,2.07-10.17,2.07s-7.36-.72-10.13-2.16c-2.78-1.44-4.93-3.3-6.48-5.59-.37-.55-.72-1.12-1.03-1.69-.1.22-.2.43-.3.64-1.48,2.99-3.48,5.29-6,6.89-2.47,1.59-5.35,2.43-8.29,2.41-1.61.01-3.21-.28-4.71-.86-1.37-.52-2.65-1.28-3.77-2.23-1.02-.88-1.92-1.89-2.66-3.02h-.72v18.67h-12.21v-28.56c-.43,2.16-1.23,4.23-2.37,6.12-1.81,3.03-4.4,5.53-7.5,7.22-3.26,1.74-6.9,2.66-10.59,2.66s-7.33-.91-10.59-2.66c-3.1-1.69-5.69-4.19-7.5-7.22-1.56-2.6-2.48-5.54-2.68-8.56-.21-3.03.3-6.06,1.49-8.85h-4.76c-1.31-.03-2.61.28-3.77.9-1.06.58-1.93,1.45-2.51,2.51-.62,1.16-.93,2.46-.9,3.77v19.03h-12.21v-37.35h11.85v5.39h.72c.72-1.72,1.88-3.22,3.37-4.34,1.53-1.17,3.45-1.76,5.75-1.76h3.81v9.28c1.8-2.93,4.34-5.33,7.36-6.98,3.26-1.74,6.9-2.66,10.59-2.66s7.34.91,10.59,2.66c3.1,1.69,5.69,4.18,7.5,7.22,1.14,1.89,1.94,3.96,2.37,6.12v-14.92h12.21v5.03h.72c.74-1.13,1.63-2.14,2.66-3.02,1.12-.95,2.4-1.7,3.77-2.23,1.5-.58,3.1-.87,4.71-.86,2.94-.02,5.82.81,8.29,2.41,2.51,1.6,4.51,3.9,6,6.89,1.49,2.99,2.23,6.48,2.23,10.45,0,1.34-.09,2.68-.27,4.01h8.37c.45,1.44,1.36,2.7,2.58,3.59,1.29.99,2.97,1.49,5.05,1.49,1.29.03,2.57-.22,3.75-.73.97-.42,1.81-1.1,2.41-1.97.54-.8.83-1.74.83-2.7,0-.94-.29-1.86-.83-2.64-.61-.87-1.44-1.57-2.41-2-1.18-.53-2.46-.79-3.75-.76h-10.16v-7.62l10.16-6.35v-.64h-17.15v-10.17h33.36v10.17l-9.85,6.04-.7.26v.76l.13-.06c2.37-.03,4.7.56,6.77,1.72,2.9,1.64,5.04,4.34,5.99,7.53v-18.58h11.85v5.39h.72c.72-1.72,1.88-3.22,3.38-4.34,1.53-1.17,3.45-1.76,5.75-1.76h3.81v.72h1.08v-7.9h12.21v7.9h19.75l6.46,26.93h2.15l7.18-26.93h12.57l-14.36,50.99h-12.57ZM368.13,300.34c-1.21.76-2.17,1.86-2.76,3.16-.67,1.39-1,3.09-1.01,5.1,0,2.01.33,3.71,1.01,5.1.59,1.3,1.55,2.4,2.76,3.16,1.26.71,2.68,1.08,4.13,1.08s2.87-.37,4.13-1.08c1.21-.76,2.17-1.86,2.76-3.16.67-1.39,1.01-3.09,1.01-5.1,0-2.01-.34-3.71-1.01-5.1-.59-1.3-1.55-2.4-2.76-3.16-1.26-.71-2.68-1.08-4.13-1.08s-2.87.37-4.13,1.08ZM327.45,300.41c-1.27.79-2.29,1.93-2.95,3.27-.71,1.54-1.08,3.22-1.08,4.92s.37,3.38,1.08,4.92c.66,1.34,1.68,2.48,2.95,3.27,1.27.79,2.74,1.21,4.23,1.21s2.96-.42,4.23-1.21c1.27-.79,2.29-1.93,2.95-3.27.71-1.54,1.08-3.22,1.08-4.92s-.37-3.38-1.08-4.92c-.51-.99-1.22-1.86-2.08-2.57-.86-.71-1.86-1.23-2.93-1.53-1.07-.31-2.19-.39-3.29-.25-1.1.14-2.17.51-3.12,1.08ZM242.99,327.28v-50.27h24.42c4.07,0,7.68.81,10.84,2.44,3.16,1.63,5.61,3.84,7.36,6.64,1.71,2.77,2.62,5.97,2.62,9.23s-.91,6.46-2.62,9.23c-1.75,2.8-4.2,5.02-7.36,6.64s-6.77,2.44-10.84,2.44h-11.13v13.65h-13.29ZM256.28,301.42h10.77c2.44,0,4.31-.55,5.6-1.65,1.29-1.1,1.94-2.59,1.94-4.45s-.65-3.35-1.94-4.45c-1.29-1.1-3.16-1.65-5.6-1.65h-10.77v12.21Z"></path><path d="M204.2,265.42c2.57,1.46,4.63,3.59,5.74,6.38l10.49,32.28c.76,3.5-.26,7.06-2.29,9.94l-36.53,42.84c-4.69,5.06-9.96,3.9-15.82,2.29-.17-.05-.73-.16-.8-.26l-9.27-28.48c-1.54-5.86.85-11.82,6.67-14.08,4.54-1.76,9.69-2.78,14.17-4.6,6.26-2.54,7.05-11.09.91-14.29-3.46-1.8-6.52-.18-9.91.9-6.12,1.95-12.26,3.89-18.37,5.97-5.15,1.75-7.76,5.26-6.59,10.82l13.43,41.29-.04.34-39.96-9.71c-3.47-1.15-6.37-3.44-7.81-6.89l-10.13-31.16c-1.12-4.24-.15-8.54,2.54-11.95,11.6-13.72,23.48-27.19,35.46-40.59,1.53-1.55,3.4-2.74,5.46-3.46,2.06-.72,4.26-.96,6.43-.7,14.24,2.94,28.45,5.97,42.6,9.31,3.49.82,7.7,1.56,11.05,2.63.9.31,1.76.71,2.58,1.19M190.13,312.88c-1.85,3.67-5.34,7.2-9.22,8.74-4.11,1.62-8.72,2.61-12.88,4.18-1.13.56-1.83,1.65-1.57,2.93l5.83,17.95c.56,1.3,2.13,1.76,3.13.66,9.73-11.48,19.56-22.87,29.26-34.37,2.38-2.83,5.31-5.23,4.28-9.42l-8.04-24.72c-.46-1.04-1.13-1.98-1.98-2.74-.85-.76-1.85-1.33-2.94-1.68-3.4-.98-7.39-1.59-10.89-2.38-10.08-2.28-20.15-4.67-30.25-6.84-4.95-1.06-8.94-2.59-13.06,1.63l-31.37,36.09c-.95,1.47-1.38,3.23-1.21,4.97,2.69,8.82,5.52,17.68,8.59,26.37.73,1.18,1.82,2.1,3.1,2.63l17.23,4.28c.77,0,1.18-.68,1.07-1.39-2.22-7.71-5.38-15.38-7.51-23.09-1.25-4.52-.9-9.56,1.91-13.42,2.42-3.31,5.71-6.99,9.61-8.5l27.56-8.95c15.32-2.95,26.21,13.41,19.34,27.08"></path><path d="M521.41,297.93c-.71,0-1.41-.17-2.02-.52-.6-.34-1.09-.82-1.44-1.41-.35-.59-.53-1.27-.53-1.95,0-.69.18-1.36.53-1.95.35-.59.85-1.07,1.44-1.41.62-.35,1.31-.53,2.02-.52.71,0,1.41.17,2.02.52.6.34,1.09.82,1.44,1.41.35.59.53,1.27.53,1.95,0,.69-.18,1.36-.53,1.95-.35.59-.85,1.07-1.44,1.41-.62.35-1.31.53-2.02.52ZM521.41,296.89c.52,0,1.04-.12,1.5-.36.43-.23.78-.58,1.02-1.01.25-.45.38-.96.37-1.48,0-.52-.12-1.02-.37-1.48-.24-.43-.59-.78-1.02-1.01-.46-.25-.98-.37-1.5-.36-.52,0-1.04.12-1.5.36-.43.23-.78.58-1.02,1.01-.25.45-.38.96-.37,1.48,0,.52.12,1.02.37,1.48.24.43.59.78,1.02,1.01.46.25.98.37,1.5.36h0ZM519.89,295.75v-3.62h1.7c.43-.03.87.09,1.22.35.14.12.25.27.32.44.07.17.1.35.09.54,0,.25-.06.49-.2.7-.13.18-.3.32-.5.41l.81,1.18h-1.18l-.7-1h-.48v1h-1.07ZM521.59,293.86c.14,0,.27-.03.39-.1.04-.03.08-.08.1-.12.02-.05.04-.1.03-.16,0-.06,0-.11-.03-.16-.02-.05-.06-.09-.1-.13-.11-.08-.25-.11-.39-.1h-.63v.78h.63Z"></path></svg>
       </a>
       <nav id="site-nav" style="display: flex; align-items: center; gap: 32px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">
-        <a href="diensten.html" style="font-size: 16px; font-weight: 500; color: #63736F;" style-hover="color: #0E2D30;">Diensten</a>
-        <a href="platform.html" style="font-size: 16px; font-weight: 500; color: #63736F;" style-hover="color: #0E2D30;">Platform</a>
-        <a href="over-ons.html" style="font-size: 16px; font-weight: 500; color: #63736F;" style-hover="color: #0E2D30;">Over ons</a>
-        <a href="tarieven.html" style="font-size: 16px; font-weight: 500; color: #63736F;" style-hover="color: #0E2D30;">Tarieven</a>
-        <a href="contact.html" style="font-size: 16px; font-weight: 500; color: #63736F;" style-hover="color: #0E2D30;">Contact</a>
+        <a href="Diensten.dc.html" style="font-size: 16px; font-weight: 500; color: #63736F;" style-hover="color: #0E2D30;">Diensten</a>
+        <a href="Platform.dc.html" style="font-size: 16px; font-weight: 500; color: #63736F;" style-hover="color: #0E2D30;">Platform</a>
+        <a href="Over ons.dc.html" style="font-size: 16px; font-weight: 500; color: #63736F;" style-hover="color: #0E2D30;">Over ons</a>
+        <a href="Tarieven.dc.html" style="font-size: 16px; font-weight: 500; color: #63736F;" style-hover="color: #0E2D30;">Tarieven</a>
+        <a href="Contact.dc.html" style="font-size: 16px; font-weight: 500; color: #63736F;" style-hover="color: #0E2D30;">Contact</a>
       </nav>
       <div id="header-actions" style="display: flex; align-items: center; gap: 20px;">
         <a href="https://vastgoed-portal-sepia.vercel.app/login" style="display: inline-flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; color: #0E2D30; white-space: nowrap;"><svg viewBox="0 0 20 20" aria-hidden="true" style="width: 19px; height: 19px;" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="6.75" r="3"></circle><path d="M3.75 17c.55-3.1 3.1-4.75 6.25-4.75S15.7 13.9 16.25 17"></path></svg>Mijn Prop3rty</a>
-        <a href="tarieven.html" style="display: inline-flex; align-items: center; gap: 8px; background: #0E2D30; color: #ffffff; font-size: 16px; font-weight: 700; padding: 13px 22px; border-radius: 999px; white-space: nowrap;" style-hover="background: #16383B; color: #ffffff;">Plan een gesprek</a>
+        <a href="Tarieven.dc.html" style="display: inline-flex; align-items: center; gap: 8px; background: #0E2D30; color: #ffffff; font-size: 16px; font-weight: 700; padding: 13px 22px; border-radius: 999px; white-space: nowrap;" style-hover="background: #16383B; color: #ffffff;">Plan een gesprek</a>
       </div>
       <div id="menu-btn" role="button" aria-label="Menu" style="display: none; align-items: center; justify-content: center; width: 44px; height: 44px; flex: none; cursor: pointer; border-radius: 999px;">
         <svg viewBox="0 0 22 22" aria-hidden="true" style="width: 22px; height: 22px;" fill="none" stroke="#0E2D30" stroke-width="2" stroke-linecap="round"><path d="M3 6.5h16"></path><path d="M3 11h16"></path><path d="M3 15.5h16"></path></svg>
@@ -902,19 +916,19 @@ function init_whats_app_modal() {
   </header>
   <div id="mobile-menu" style="position: fixed; inset: 0; z-index: 100; background: #0E2D30; display: flex; flex-direction: column; padding: 28px 28px 36px; opacity: 0; visibility: hidden; clip-path: circle(0px at calc(100% - 52px) 52px); transition: clip-path 0.55s cubic-bezier(0.7, 0, 0.2, 1), opacity 0.3s ease 0.25s, visibility 0s linear 0.55s;">
     <div style="display: flex; align-items: center; justify-content: space-between;">
-      <a href="index.html" style="font-size: 22px; font-weight: 900; letter-spacing: -0.02em; color: #F6F9F4;">Prop3rty</a>
+      <a href="index.dc.html" style="font-size: 22px; font-weight: 900; letter-spacing: -0.02em; color: #F6F9F4;">Prop3rty</a>
       <div id="menu-close" role="button" aria-label="Sluit menu" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; cursor: pointer; border: 1px solid rgba(246,249,244,0.25); border-radius: 999px;">
         <svg viewBox="0 0 20 20" aria-hidden="true" style="width: 18px; height: 18px;" fill="none" stroke="#F6F9F4" stroke-width="2" stroke-linecap="round"><path d="M5 5l10 10"></path><path d="M15 5L5 15"></path></svg>
       </div>
     </div>
     <nav style="display: flex; flex-direction: column; gap: 6px; margin: auto 0; padding: 40px 0;">
-      <a href="diensten.html" style="font-size: 38px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.25; color: #F6F9F4; padding: 6px 0;">Diensten</a>
-      <a href="platform.html" style="font-size: 38px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.25; color: #F6F9F4; padding: 6px 0;">Platform</a>
-      <a href="over-ons.html" style="font-size: 38px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.25; color: #F6F9F4; padding: 6px 0;">Verhalen</a>
-      <a href="tarieven.html" style="font-size: 38px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.25; color: #F6F9F4; padding: 6px 0;">Tarieven</a>
+      <a href="Diensten.dc.html" style="font-size: 38px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.25; color: #F6F9F4; padding: 6px 0;">Diensten</a>
+      <a href="Platform.dc.html" style="font-size: 38px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.25; color: #F6F9F4; padding: 6px 0;">Platform</a>
+      <a href="Over ons.dc.html" style="font-size: 38px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.25; color: #F6F9F4; padding: 6px 0;">Verhalen</a>
+      <a href="Tarieven.dc.html" style="font-size: 38px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.25; color: #F6F9F4; padding: 6px 0;">Tarieven</a>
     </nav>
     <div style="display: flex; flex-direction: column; gap: 12px;">
-      <a href="tarieven.html" style="display: block; text-align: center; background: #CEFF8A; color: #14141A; font-size: 17px; font-weight: 700; padding: 16px 26px; border-radius: 999px;">Plan een gesprek</a>
+      <a href="Tarieven.dc.html" style="display: block; text-align: center; background: #CEFF8A; color: #14141A; font-size: 17px; font-weight: 700; padding: 16px 26px; border-radius: 999px;">Plan een gesprek</a>
       <a href="https://vastgoed-portal-sepia.vercel.app/login" style="display: block; text-align: center; color: #F6F9F4; font-size: 17px; font-weight: 700; padding: 15px 26px; background: rgba(255,255,255,0.14); border-radius: 999px;">Mijn Prop3rty</a>
     </div>
   </div>
@@ -930,34 +944,38 @@ function init_whats_app_modal() {
       <span style="position: absolute; top: 0; left: 50%; width: 1760px; height: 1760px; margin-left: -880px; margin-top: -739px; border: 1px solid #D9E2DA; border-radius: 999px; opacity: 0.5; animation: ring-pulse 5.6s ease-in-out 2s infinite;"></span>
     </div>
     <div style="position: relative; max-width: 1200px; margin: 0 auto;">
-      <div style="display: inline-flex; align-items: center; gap: 12px; background: #ffffff; border: 1px solid #E2E8DE; border-radius: 999px; padding: 8px 16px 8px 10px; box-shadow: 0 6px 20px rgba(14,45,48,0.06);">
-        <div style="display: flex;">
-          <img src="assets/img/6j0xy_g8c.jpg" alt="" style="width: 30px; height: 30px; border-radius: 999px; object-fit: cover; border: 2px solid #fff;">
-          <img src="assets/img/13ios6c_e90.jpg" alt="" style="width: 30px; height: 30px; border-radius: 999px; object-fit: cover; border: 2px solid #fff; margin-left: -10px;">
-          <img src="assets/img/pwgwj0_gf4.jpg" alt="" style="width: 30px; height: 30px; border-radius: 999px; object-fit: cover; border: 2px solid #fff; margin-left: -10px;">
-        </div>
-        <p style="font-size: 15px; font-weight: 500; color: #0E2D30;">Jouw vaste team, altijd bereikbaar</p>
-      </div>
-      <h1 style="margin: 28px auto 0; max-width: 900px; font-size: 68px; line-height: 1.05; letter-spacing: -0.035em; font-weight: 900; color: #0E2D30; text-wrap: balance;">Wij nemen het beheer van je vastgoed volledig uit handen.</h1>
+      <h1 style="margin: 0 auto; max-width: 900px; font-size: 68px; line-height: 1.05; letter-spacing: -0.035em; font-weight: 900; color: #0E2D30; text-wrap: balance;">Wij nemen het beheer van je vastgoed volledig uit handen.</h1>
       <p style="margin: 20px auto 0; max-width: 680px; font-size: 19px; line-height: 1.6; color: #63736F; text-wrap: pretty;">Ons vaste team werkt met een autonoom systeem dat het grootste deel van het beheerwerk automatiseert. Daardoor beheren we sneller, beter en kostenefficiënter. Jij houdt volledige controle, je huurders krijgen betere service en onder aan de streep levert het meer rendement op.</p>
       <div style="display: flex; justify-content: center; gap: 14px; margin-top: 34px; flex-wrap: wrap;">
-        <a href="tarieven.html" style="display: inline-flex; align-items: center; background: #ffffff; color: #0E2D30; font-size: 16px; font-weight: 700; padding: 15px 28px; border-radius: 999px;" style-hover="border-color: #0E2D30; color: #0E2D30;">Plan een gesprek</a>
-        <a href="diensten.html" style="display: inline-flex; align-items: center; gap: 8px; background: #0E2D30; color: #ffffff; font-size: 16px; font-weight: 700; padding: 15px 26px; border-radius: 999px;" style-hover="background: #16383B; color: #ffffff;">Ontdek onze diensten<img src="https://cdn.prod.website-files.com/668532b1e1ce82a9331d1a87/668532b1e1ce82a9331d1ab3_cheveron-right.svg" alt="" style="width: 18px; height: 18px;"></a>
+        <a href="Tarieven.dc.html" style="display: inline-flex; align-items: center; background: #ffffff; color: #0E2D30; font-size: 16px; font-weight: 700; padding: 15px 28px; border-radius: 999px;" style-hover="border-color: #0E2D30; color: #0E2D30;">Plan een gesprek</a>
+        <a href="Diensten.dc.html" style="display: inline-flex; align-items: center; gap: 8px; background: #0E2D30; color: #ffffff; font-size: 16px; font-weight: 700; padding: 15px 26px; border-radius: 999px;" style-hover="background: #16383B; color: #ffffff;">Ontdek onze diensten<img src="https://cdn.prod.website-files.com/668532b1e1ce82a9331d1a87/668532b1e1ce82a9331d1ab3_cheveron-right.svg" alt="" style="width: 18px; height: 18px;"></a>
       </div>
       </div>
     <div style="position: relative; margin-top: 64px; padding-bottom: 88px;">
       <div style="width: 100%; overflow: hidden;">
       <div id="media-track" style="display: flex; gap: 20px; width: max-content; will-change: transform;">
+        <div data-cursor-marquee-text="Seaview, Scheveningen ·" style="position: relative; flex: none; width: 320px; aspect-ratio: 3 / 4; border-radius: 24px; overflow: hidden; background: #E2E8DE;">
+          <img loading="lazy" decoding="async" src="assets/img/h-1ls5uq51683u4m87ts.jpg" alt="Seaview" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+          <span style="position: absolute; left: 18px; bottom: 16px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.35);">Seaview</span>
+        </div>
+        <div data-cursor-marquee-text="De Pier in Den Haag ·" style="position: relative; flex: none; width: 320px; aspect-ratio: 3 / 4; border-radius: 24px; overflow: hidden; background: #E2E8DE;">
+          <img loading="lazy" decoding="async" src="assets/img/h-llobrt1qwt028yvg.jpg" alt="De Pier in Den Haag" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+          <span style="position: absolute; left: 18px; bottom: 16px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.35);">De pier in Den Haag</span>
+        </div>
+        <div data-cursor-marquee-text="Palace Promenade ·" style="position: relative; flex: none; width: 320px; aspect-ratio: 3 / 4; border-radius: 24px; overflow: hidden; background: #E2E8DE;">
+          <img loading="lazy" decoding="async" src="assets/img/h-hf3dc71nqhvqs5fz4.jpg" alt="Palace Promenade" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+          <span style="position: absolute; left: 18px; bottom: 16px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.35);">De Palace Promenade</span>
+        </div>
         <div data-cursor-marquee-text="Altijd een vast team op locatie ·" style="position: relative; flex: none; width: 320px; aspect-ratio: 3 / 4; border-radius: 24px; overflow: hidden; background: #E2E8DE;">
           <video data-hls="https://vz-45716865-4aa.b-cdn.net/6288f55c-592b-4e7f-a744-b759ae67b282/playlist.m3u8" muted="" autoplay="" loop="" playsinline="" preload="metadata" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;"></video>
           <span style="position: absolute; left: 18px; bottom: 16px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.35);">Op locatie</span>
         </div>
         <div data-cursor-marquee-text="Jesse, je vaste beheerder ·" style="position: relative; flex: none; width: 320px; aspect-ratio: 3 / 4; border-radius: 24px; overflow: hidden; background: #E2E8DE;">
-          <img fetchpriority="high" decoding="async" src="assets/img/ll74ym_zs.jpg" alt="Jesse, beheerder bij Prop3rty" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+          <img fetchpriority="high" decoding="async" src="assets/img/h-1ui99k2wxwwn20zs.jpg" alt="Jesse, beheerder bij Prop3rty" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
           <span style="position: absolute; left: 18px; bottom: 16px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.35);">Jesse · Beheer</span>
         </div>
         <div data-cursor-marquee-text="Panden door heel Amsterdam ·" style="position: relative; flex: none; width: 320px; aspect-ratio: 3 / 4; border-radius: 24px; overflow: hidden; background: #E2E8DE;">
-          <img loading="lazy" decoding="async" src="assets/img/89y369_kvc.jpg" alt="Panden aan de Amsterdamse gracht" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+          <img loading="lazy" decoding="async" src="assets/img/h-10zw2sx159rc8e3kvc.jpg" alt="Panden aan de Amsterdamse gracht" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
           <span style="position: absolute; left: 18px; bottom: 16px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.35);">Amsterdam</span>
         </div>
         <div data-cursor-marquee-text="Al je vastgoed in één overzicht ·" style="position: relative; flex: none; width: 320px; aspect-ratio: 3 / 4; border-radius: 24px; overflow: hidden; background: #0E2D30;">
@@ -969,23 +987,35 @@ function init_whats_app_modal() {
           <span style="position: absolute; left: 18px; bottom: 16px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.35);">In de wijk</span>
         </div>
         <div data-cursor-marquee-text="Sarah staat klaar op de servicelijn ·" style="position: relative; flex: none; width: 320px; aspect-ratio: 3 / 4; border-radius: 24px; overflow: hidden; background: #E2E8DE;">
-          <img loading="lazy" decoding="async" src="assets/img/l8exbu_80g.jpg" alt="Sarah van de servicelijn" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+          <img loading="lazy" decoding="async" src="assets/img/h-13b9ri6932t0b280g.jpg" alt="Sarah van de servicelijn" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
           <span style="position: absolute; left: 18px; bottom: 16px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.35);">Sarah · Servicelijn</span>
         </div>
         <div data-cursor-marquee-text="Het team achter Prop3rty ·" style="position: relative; flex: none; width: 320px; aspect-ratio: 3 / 4; border-radius: 24px; overflow: hidden; background: #E2E8DE;">
-          <img loading="lazy" decoding="async" src="assets/img/dnhn3v_ogk.jpg" alt="Het Prop3rty-team" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+          <img loading="lazy" decoding="async" src="assets/img/h-p7yha71722xo3ogk.jpg" alt="Het Prop3rty-team" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
           <span style="position: absolute; left: 18px; bottom: 16px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.35);">Ons team</span>
         </div>
+        <div data-cursor-marquee-text="Seaview, Scheveningen ·" style="position: relative; flex: none; width: 320px; aspect-ratio: 3 / 4; border-radius: 24px; overflow: hidden; background: #E2E8DE;">
+          <img loading="lazy" decoding="async" src="assets/img/h-1ls5uq51683u4m87ts.jpg" alt="Seaview" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+          <span style="position: absolute; left: 18px; bottom: 16px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.35);">Seaview</span>
+        </div>
+        <div data-cursor-marquee-text="De Pier in Den Haag ·" style="position: relative; flex: none; width: 320px; aspect-ratio: 3 / 4; border-radius: 24px; overflow: hidden; background: #E2E8DE;">
+          <img loading="lazy" decoding="async" src="assets/img/h-llobrt1qwt028yvg.jpg" alt="De Pier in Den Haag" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+          <span style="position: absolute; left: 18px; bottom: 16px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.35);">De pier in Den Haag</span>
+        </div>
+        <div data-cursor-marquee-text="Palace Promenade ·" style="position: relative; flex: none; width: 320px; aspect-ratio: 3 / 4; border-radius: 24px; overflow: hidden; background: #E2E8DE;">
+          <img loading="lazy" decoding="async" src="assets/img/h-hf3dc71nqhvqs5fz4.jpg" alt="Palace Promenade" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+          <span style="position: absolute; left: 18px; bottom: 16px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.35);">De Palace Promenade</span>
+        </div>
         <div data-cursor-marquee-text="Altijd een vast team op locatie ·" style="position: relative; flex: none; width: 320px; aspect-ratio: 3 / 4; border-radius: 24px; overflow: hidden; background: #E2E8DE;">
           <video data-hls="https://vz-45716865-4aa.b-cdn.net/6288f55c-592b-4e7f-a744-b759ae67b282/playlist.m3u8" muted="" autoplay="" loop="" playsinline="" preload="metadata" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;"></video>
           <span style="position: absolute; left: 18px; bottom: 16px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.35);">Op locatie</span>
         </div>
         <div data-cursor-marquee-text="Jesse, je vaste beheerder ·" style="position: relative; flex: none; width: 320px; aspect-ratio: 3 / 4; border-radius: 24px; overflow: hidden; background: #E2E8DE;">
-          <img fetchpriority="high" decoding="async" src="assets/img/ll74ym_zs.jpg" alt="Jesse, beheerder bij Prop3rty" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+          <img fetchpriority="high" decoding="async" src="assets/img/h-1ui99k2wxwwn20zs.jpg" alt="Jesse, beheerder bij Prop3rty" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
           <span style="position: absolute; left: 18px; bottom: 16px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.35);">Jesse · Beheer</span>
         </div>
         <div data-cursor-marquee-text="Panden door heel Amsterdam ·" style="position: relative; flex: none; width: 320px; aspect-ratio: 3 / 4; border-radius: 24px; overflow: hidden; background: #E2E8DE;">
-          <img loading="lazy" decoding="async" src="assets/img/89y369_kvc.jpg" alt="Panden aan de Amsterdamse gracht" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+          <img loading="lazy" decoding="async" src="assets/img/h-10zw2sx159rc8e3kvc.jpg" alt="Panden aan de Amsterdamse gracht" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
           <span style="position: absolute; left: 18px; bottom: 16px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.35);">Amsterdam</span>
         </div>
         <div data-cursor-marquee-text="Al je vastgoed in één overzicht ·" style="position: relative; flex: none; width: 320px; aspect-ratio: 3 / 4; border-radius: 24px; overflow: hidden; background: #0E2D30;">
@@ -997,11 +1027,11 @@ function init_whats_app_modal() {
           <span style="position: absolute; left: 18px; bottom: 16px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.35);">In de wijk</span>
         </div>
         <div data-cursor-marquee-text="Sarah staat klaar op de servicelijn ·" style="position: relative; flex: none; width: 320px; aspect-ratio: 3 / 4; border-radius: 24px; overflow: hidden; background: #E2E8DE;">
-          <img loading="lazy" decoding="async" src="assets/img/l8exbu_80g.jpg" alt="Sarah van de servicelijn" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+          <img loading="lazy" decoding="async" src="assets/img/h-13b9ri6932t0b280g.jpg" alt="Sarah van de servicelijn" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
           <span style="position: absolute; left: 18px; bottom: 16px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.35);">Sarah · Servicelijn</span>
         </div>
         <div data-cursor-marquee-text="Het team achter Prop3rty ·" style="position: relative; flex: none; width: 320px; aspect-ratio: 3 / 4; border-radius: 24px; overflow: hidden; background: #E2E8DE;">
-          <img loading="lazy" decoding="async" src="assets/img/dnhn3v_ogk.jpg" alt="Het Prop3rty-team" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+          <img loading="lazy" decoding="async" src="assets/img/h-p7yha71722xo3ogk.jpg" alt="Het Prop3rty-team" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
           <span style="position: absolute; left: 18px; bottom: 16px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.35);">Ons team</span>
         </div>
       </div>
@@ -1012,46 +1042,79 @@ function init_whats_app_modal() {
 
   <section style="padding: 96px 24px 104px;">
     <div style="max-width: 1200px; margin: 0 auto;">
-      <h2 style="font-size: 46px; line-height: 1.12; letter-spacing: -0.03em; font-weight: 900; color: #0E2D30; text-wrap: balance; max-width: 18em;" data-reveal="">Slimme technologie maakt beheer snel en simpel, met een vast team dat je huurders kent.</h2>
-      <div class="m-stack" style="display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 24px; margin-top: 56px; align-items: stretch;">
-        <div class="m-photo" style="position: relative; border-radius: 24px; overflow: hidden; min-height: 520px; background: #16383B;" data-reveal="80">
-          <img loading="lazy" decoding="async" src="assets/img/1lnn3d7_7fw.jpg" alt="Beheerder van Prop3rty in overleg met een eigenaar" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 35%;">
+      <div class="m-stack" style="display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;">
+        <div class="snd-wrap" style="position: relative;">
+          <video class="m-photo" data-sound-video="" data-hq="" data-hls="https://vz-45716865-4aa.b-cdn.net/d428d19f-232a-4a25-999d-b2fb5e3f0b36/playlist.m3u8" muted="" autoplay="" loop="" playsinline="" preload="metadata" data-parallax="trigger" data-parallax-start="8" data-parallax-end="-8" style="width: 100%; aspect-ratio: 9 / 11; object-fit: cover; border-radius: 24px; display: block; background: #16383B;"></video>
+          <button type="button" class="snd-btn" data-on="{{ soundOnAttr }}" onClick="{{ toggleSound }}" aria-label="{{ soundLabel }}" style="position: absolute; left: 18px; bottom: 18px; display: flex; align-items: center; gap: 10px; padding: 11px 18px 11px 14px; border: none; border-radius: 999px; background: rgba(14,45,48,0.82); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: #ffffff; font-family: 'Satoshi', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity 0.3s ease, background 0.2s ease;" style-hover="background: #0E2D30;">
+            <svg viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px; flex: none;"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="#CEFF8A"></path><path d="{{ soundIconPath }}" fill="none" stroke="#CEFF8A" stroke-width="2" stroke-linecap="round"></path></svg>
+            <span>{{ soundLabel }}</span>
+          </button>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 24px;">
-          <div class="m-photo" style="position: relative; flex: 1; min-height: 240px; border-radius: 24px; overflow: hidden; background: #16383B;" data-reveal="120">
-            <img loading="lazy" decoding="async" src="assets/img/r6hmbh_c64.jpg" alt="Woontoren in beheer bij Prop3rty" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
-          </div>
-          <div style="background: #ffffff; border: 1px solid #E2E8DE; border-radius: 24px; padding: 28px;" data-reveal="160">
-            <p style="font-size: 16px; line-height: 1.6; color: #63736F;">Wij nemen de tijd om je portefeuille, je huurders en je doelen echt te leren kennen. Door korte lijnen tussen eigenaar, huurder en vakman houden we het beheer voorspelbaar, ook als je portefeuille groeit.</p>
-            <a href="diensten.html" style="display: inline-flex; align-items: center; gap: 8px; margin-top: 22px; background: #0E2D30; color: #ffffff; font-size: 15px; font-weight: 700; padding: 13px 24px; border-radius: 999px;" style-hover="background: #16383B; color: #ffffff;">Zo werkt de overstap</a>
-          </div>
+        <div data-reveal-group="" data-stagger="90">
+          <h2 style="font-size: 42px; line-height: 1.14; letter-spacing: -0.03em; font-weight: 900; color: #0E2D30; ">Meer grip op je portefeuille, minder werk op je bureau.</h2>
+          <p style="font-size: 19px; line-height: 1.55; color: #63736F; margin-top: 16px; max-width: 26em; text-wrap: pretty;"><strong style="font-weight: 700; color: #0E2D30;">Administratief, technisch en commercieel beheer</strong> in één hand.</p>
+          <p style="font-size: 17px; line-height: 1.6; color: #63736F; margin-top: 14px; max-width: 28em; text-wrap: pretty;">Ons autonome systeem verwerkt meldingen, plant onderhoud in en bewaakt je dossiers. <strong style="font-weight: 700; color: #0E2D30;">Jij houdt volledige controle via je portaal.</strong></p>
+          <p style="font-size: 17px; line-height: 1.6; color: #63736F; margin-top: 12px; max-width: 28em; text-wrap: pretty;">Elk kwartaal een rapportage met <strong style="font-weight: 700; color: #0E2D30;">rendement, leegstand en onderhoudskosten per pand</strong>.</p>
+          <a href="Tarieven.dc.html" style="display: inline-flex; margin-top: 30px; background: #0E2D30; color: #ffffff; font-size: 16px; font-weight: 700; padding: 15px 26px; border-radius: 999px;" style-hover="background: #16383B; color: #ffffff;">Plan een gesprek</a>
         </div>
       </div>
-    </div>
-  </section>
-
-  <section style="padding: 24px 24px 0;">
-    <div style="max-width: 1200px; margin: 0 auto; background: #0E2D30; border-radius: 32px; padding: 72px 56px;">
-      <div style="max-width: 26em; margin: 0 auto 52px; text-align: center;" data-reveal="">
-        <h2 style="font-size: 44px; line-height: 1.12; letter-spacing: -0.03em; font-weight: 900; color: #ffffff; text-wrap: balance;">Alles in beeld, altijd actueel</h2>
-      </div>
-      <div class="m-cols m-swipe" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px;">
-        <div style="display: flex; flex-direction: column; gap: 22px;" data-reveal="">
-          <div style="position: relative; border-radius: 24px; background: #16383B; aspect-ratio: 16 / 10; overflow: hidden;">
-            <video data-hq="" data-hls="https://vz-45716865-4aa.b-cdn.net/4be87618-d4c2-4d78-a2de-b179b212bf6c/playlist.m3u8" muted="" autoplay="" loop="" playsinline="" preload="auto" aria-label="Financieel overzicht in het Prop3rty-portaal" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;"></video>
+      <div data-logo-wall-shuffle="false" data-logo-wall-cycle-init="" style="margin-top: 56px; border-top: 1px solid #E2E8DE; border-bottom: 1px solid #E2E8DE;" data-reveal="">
+        <div data-logo-wall-list="" style="display: flex; flex-wrap: wrap;">
+          <div data-logo-wall-item="" class="lw-item" style="position: relative; justify-content: center; align-items: center; height: 120px; cursor: default;">
+            <div data-logo-wall-target-parent="" style="position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+              <div data-logo-wall-target="" role="img" aria-label="Funda" style="position: absolute; width: 70%; height: 50%; display: flex; justify-content: center; align-items: center;">
+                <img class="lw-color" src="assets/logos/funda-2.svg" alt="" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;">
+              </div>
+            </div>
           </div>
-          <div>
-            <p style="font-size: 24px; font-weight: 900; letter-spacing: -0.025em; color: #ffffff;">Je financiën</p>
-            <p style="font-size: 16px; line-height: 1.65; color: #A9BCBA; margin-top: 10px; max-width: 30em;">Huurinkomsten, kosten en rendement per pand in één overzicht. Je ziet realtime wat je portefeuille oplevert, zonder te wachten op een afrekening.</p>
+          <div data-logo-wall-item="" class="lw-item" style="position: relative; justify-content: center; align-items: center; height: 120px; cursor: default;">
+            <div data-logo-wall-target-parent="" style="position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+              <div data-logo-wall-target="" role="img" aria-label="Exact" style="position: absolute; width: 70%; height: 50%; display: flex; justify-content: center; align-items: center;">
+                <img class="lw-color" src="assets/logos/exact.svg" alt="" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;">
+              </div>
+            </div>
           </div>
-        </div>
-        <div style="display: flex; flex-direction: column; gap: 22px;" data-reveal="">
-          <div style="position: relative; border-radius: 24px; background: #16383B; aspect-ratio: 16 / 10; overflow: hidden;">
-            <video data-hq="" data-hls="https://vz-45716865-4aa.b-cdn.net/f7e39fdd-f048-4d60-af43-3fa80f47d9b4/playlist.m3u8" muted="" autoplay="" loop="" playsinline="" preload="auto" aria-label="Vastgoedoverzicht in het Prop3rty-portaal" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;"></video>
+          <div data-logo-wall-item="" class="lw-item" style="position: relative; justify-content: center; align-items: center; height: 120px; cursor: default;">
+            <div data-logo-wall-target-parent="" style="position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+              <div data-logo-wall-target="" role="img" aria-label="Salesforce" style="position: absolute; width: 70%; height: 50%; display: flex; justify-content: center; align-items: center;">
+                <img class="lw-color" src="assets/logos/salesforce.svg" alt="" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;">
+              </div>
+            </div>
           </div>
-          <div>
-            <p style="font-size: 24px; font-weight: 900; letter-spacing: -0.025em; color: #ffffff;">Je vastgoed</p>
-            <p style="font-size: 16px; line-height: 1.65; color: #A9BCBA; margin-top: 10px; max-width: 30em;">Al je panden en huurders op één plek, met onderhoud, documenten en meldingen per project. Zo houd je grip op elk adres in je portefeuille.</p>
+          <div data-logo-wall-item="" class="lw-item" style="position: relative; justify-content: center; align-items: center; height: 120px; cursor: default;">
+            <div data-logo-wall-target-parent="" style="position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+              <div data-logo-wall-target="" role="img" aria-label="Vastgoed Nederland" style="position: absolute; width: 70%; height: 50%; display: flex; justify-content: center; align-items: center;">
+                <img class="lw-color" src="assets/logos/vastgoednederland.svg" alt="" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;">
+              </div>
+            </div>
+          </div>
+          <div data-logo-wall-item="" class="lw-item" style="position: relative; justify-content: center; align-items: center; height: 120px; cursor: default;">
+            <div data-logo-wall-target-parent="" style="position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+              <div data-logo-wall-target="" role="img" aria-label="Value Vastgoedfonds" style="position: absolute; width: 70%; height: 50%; display: flex; justify-content: center; align-items: center;">
+                <img class="lw-color" src="assets/logos/value.svg" alt="" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;">
+              </div>
+            </div>
+          </div>
+          <div data-logo-wall-item="" class="lw-item" style="position: relative; justify-content: center; align-items: center; height: 120px; cursor: default;">
+            <div data-logo-wall-target-parent="" style="position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+              <div data-logo-wall-target="" role="img" aria-label="KLB" style="position: absolute; width: 70%; height: 50%; display: flex; justify-content: center; align-items: center;">
+                <img class="lw-color" src="assets/logos/klb-2.svg" alt="" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;">
+              </div>
+            </div>
+          </div>
+          <div data-logo-wall-item="" class="lw-item" style="position: relative; justify-content: center; align-items: center; height: 120px; cursor: default;">
+            <div data-logo-wall-target-parent="" style="position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+              <div data-logo-wall-target="" role="img" aria-label="Reborn" style="position: absolute; width: 70%; height: 50%; display: flex; justify-content: center; align-items: center;">
+                <img class="lw-color" src="assets/logos/reborn.svg" alt="" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;">
+              </div>
+            </div>
+          </div>
+          <div data-logo-wall-item="" class="lw-item" style="position: relative; justify-content: center; align-items: center; height: 120px; cursor: default;">
+            <div data-logo-wall-target-parent="" style="position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+              <div data-logo-wall-target="" role="img" aria-label="Funda in Business" style="position: absolute; width: 70%; height: 50%; display: flex; justify-content: center; align-items: center;">
+                <img class="lw-color" src="assets/logos/funda-business.png" alt="" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;">
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1199,7 +1262,7 @@ function init_whats_app_modal() {
 
         <div style="background: #ffffff; border: 1px solid #E2E8DE; border-radius: 24px; padding: 28px;">
           <div style="height: 96px; border-radius: 16px; background: #F3F6F1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;">
-            <div style="display: flex; align-items: center;"><img src="assets/img/6j0xy_g8c.jpg" alt="" style="width: 44px; height: 44px; border-radius: 999px; object-fit: cover; border: 3px solid #F3F6F1;"><img src="assets/img/13ios6c_e90.jpg" alt="" style="width: 44px; height: 44px; border-radius: 999px; object-fit: cover; border: 3px solid #F3F6F1; margin-left: -12px;"><img src="assets/img/pwgwj0_gf4.jpg" alt="" style="width: 44px; height: 44px; border-radius: 999px; object-fit: cover; border: 3px solid #F3F6F1; margin-left: -12px;"></div>
+            <div style="display: flex; align-items: center;"><img src="assets/img/h-1mxw1551co66sgg8c.jpg" alt="" style="width: 44px; height: 44px; border-radius: 999px; object-fit: cover; border: 3px solid #F3F6F1;"><img src="assets/img/h-1p1oegf1u3xwyme90.jpg" alt="" style="width: 44px; height: 44px; border-radius: 999px; object-fit: cover; border: 3px solid #F3F6F1; margin-left: -12px;"><img src="assets/img/h-12sda6h5t881qgf4.jpg" alt="" style="width: 44px; height: 44px; border-radius: 999px; object-fit: cover; border: 3px solid #F3F6F1; margin-left: -12px;"></div>
             <p style="font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #63736F;">Jouw vaste team</p>
           </div>
           <p style="font-size: 18px; font-weight: 700; color: #0E2D30; margin-top: 18px;">Eén vast aanspreekpunt</p>
@@ -1212,62 +1275,21 @@ function init_whats_app_modal() {
 
   <section style="padding: 80px 24px;">
     <div style="max-width: 1200px; margin: 0 auto;">
-      <div class="m-stack" style="display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;">
-        <div style="position: relative;">
-          <video class="m-photo" data-hls="https://vz-45716865-4aa.b-cdn.net/d428d19f-232a-4a25-999d-b2fb5e3f0b36/playlist.m3u8" muted="" autoplay="" loop="" playsinline="" preload="metadata" data-parallax="trigger" data-parallax-start="8" data-parallax-end="-8" style="width: 100%; aspect-ratio: 9 / 11; object-fit: cover; border-radius: 24px; display: block; background: #16383B;"></video>
-        </div>
-        <div data-reveal-group="" data-stagger="90">
-          <h2 style="font-size: 42px; line-height: 1.14; letter-spacing: -0.03em; font-weight: 900; color: #0E2D30; ">Meer grip op je portefeuille, minder werk op je bureau.</h2>
-          <p style="font-size: 19px; line-height: 1.55; color: #63736F; margin-top: 16px; max-width: 26em; text-wrap: pretty;"><strong style="font-weight: 700; color: #0E2D30;">Administratief, technisch en commercieel beheer</strong> in één hand.</p>
-          <p style="font-size: 17px; line-height: 1.6; color: #63736F; margin-top: 14px; max-width: 28em; text-wrap: pretty;">Ons autonome systeem verwerkt meldingen, plant onderhoud in en bewaakt je dossiers. <strong style="font-weight: 700; color: #0E2D30;">Jij houdt volledige controle via je portaal.</strong></p>
-          <p style="font-size: 17px; line-height: 1.6; color: #63736F; margin-top: 12px; max-width: 28em; text-wrap: pretty;">Elk kwartaal een rapportage met <strong style="font-weight: 700; color: #0E2D30;">rendement, leegstand en onderhoudskosten per pand</strong>.</p>
-          <a href="tarieven.html" style="display: inline-flex; margin-top: 30px; background: #0E2D30; color: #ffffff; font-size: 16px; font-weight: 700; padding: 15px 26px; border-radius: 999px;" style-hover="background: #16383B; color: #ffffff;">Plan een gesprek</a>
-        </div>
-      </div>
-
       <div class="m-stack" style="display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; padding-bottom: 40px;">
         <div data-reveal-group="" data-stagger="90">
           <h2 style="font-size: 42px; line-height: 1.14; letter-spacing: -0.03em; font-weight: 900; color: #0E2D30; ">Eén aanspreekpunt dat écht terugbelt.</h2>
           <p style="font-size: 19px; line-height: 1.55; color: #63736F; margin-top: 16px; max-width: 26em; text-wrap: pretty;">Je melding is <strong style="font-weight: 700; color: #0E2D30;">binnen enkele minuten verwerkt en ingepland</strong>, en binnen 24 uur ligt er een oplossing.</p>
           <p style="font-size: 17px; line-height: 1.6; color: #63736F; margin-top: 14px; max-width: 28em; text-wrap: pretty;">Een melding doe je <strong style="font-weight: 700; color: #0E2D30;">in twee minuten, met foto</strong>. Je ziet wie ermee bezig is en wanneer de vakman komt.</p>
           <p style="font-size: 17px; line-height: 1.6; color: #63736F; margin-top: 12px; max-width: 28em; text-wrap: pretty;">Contracten en afrekeningen staan altijd in je portaal. Bij spoed sta je nooit in de wacht: <strong style="font-weight: 700; color: #0E2D30;">één vast team</strong>.</p>
-          <a href="tarieven.html" style="display: inline-flex; margin-top: 30px; background: #0E2D30; color: #ffffff; font-size: 16px; font-weight: 700; padding: 15px 26px; border-radius: 999px;" style-hover="background: #16383B; color: #ffffff;">Plan een gesprek</a>
+          <a href="Tarieven.dc.html" style="display: inline-flex; margin-top: 30px; background: #0E2D30; color: #ffffff; font-size: 16px; font-weight: 700; padding: 15px 26px; border-radius: 999px;" style-hover="background: #16383B; color: #ffffff;">Plan een gesprek</a>
         </div>
-        <img loading="lazy" decoding="async" class="m-photo" data-parallax="trigger" data-parallax-start="8" data-parallax-end="-8" src="assets/img/11oos8_2pk.jpg" alt="Beheerder van Prop3rty aan de gracht" style="width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 24px;">
+        <img loading="lazy" decoding="async" class="m-photo" data-parallax="trigger" data-parallax-start="8" data-parallax-end="-8" src="assets/img/h-1w2anky1kfypsb42pk.jpg" alt="Beheerder van Prop3rty aan de gracht" style="width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 24px;">
       </div>
     </div>
   </section>
 
   <section style="min-height: 100svh; background: #0E2D30; display: grid; place-items: center; padding: 80px 24px;">
     <h2 data-gradient-wave-text="" data-gradient-wave-color-start="rgba(246, 249, 244, 0.14)" data-gradient-wave-color-wave="#CEFF8A" style="max-width: 1000px; margin: 0 auto; text-align: center; font-size: clamp(34px, 5.4vw, 68px); line-height: 1.14; letter-spacing: -0.03em; font-weight: 900; color: #F6F9F4; text-wrap: pretty;">Slimmer en transparanter beheer met een autonoom AI-systeem en een vast team dat je kent.</h2>
-  </section>
-
-  <section id="pijlers" style="padding: 88px 24px 24px;">
-    <div style="max-width: 1200px; margin: 0 auto;">
-      <div class="m-cols" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px;">
-        <div style="background: #ffffff; border: 1px solid #E2E8DE; border-radius: 28px; padding: 36px; min-height: 400px; display: flex; flex-direction: column; justify-content: space-between; gap: 40px;" data-reveal="">
-          <p style="font-size: 15px; font-weight: 700; color: #94A29E;">01</p>
-          <div>
-            <h2 style="font-size: clamp(48px, 5.6vw, 76px); line-height: 0.95; letter-spacing: -0.045em; font-weight: 900; color: #0E2D30;">Service.</h2>
-            <p style="font-size: 18px; line-height: 1.55; color: #63736F; margin-top: 20px; max-width: 22em; text-wrap: pretty;">Een vast team dat je portefeuille écht kent: persoonlijk contact wanneer het ertoe doet.</p>
-          </div>
-        </div>
-        <div style="background: #0E2D30; border: 1px solid #0E2D30; border-radius: 28px; padding: 36px; min-height: 400px; display: flex; flex-direction: column; justify-content: space-between; gap: 40px;" data-reveal="">
-          <p style="font-size: 15px; font-weight: 700; color: rgba(246,249,244,0.55);">02</p>
-          <div>
-            <h2 style="font-size: clamp(48px, 5.6vw, 76px); line-height: 0.95; letter-spacing: -0.045em; font-weight: 900; color: #ffffff;">Slim.</h2>
-            <p style="font-size: 18px; line-height: 1.55; color: #A9BCBA; margin-top: 20px; max-width: 22em; text-wrap: pretty;">Een brein met 9 AI-agents dat het merendeel van het beheer automatiseert: sneller en feilloos.</p>
-          </div>
-        </div>
-        <div style="background: #CEFF8A; border: 1px solid #CEFF8A; border-radius: 28px; padding: 36px; min-height: 400px; display: flex; flex-direction: column; justify-content: space-between; gap: 40px;" data-reveal="">
-          <p style="font-size: 15px; font-weight: 700; color: rgba(20,20,26,0.5);">03</p>
-          <div>
-            <h2 style="font-size: clamp(48px, 5.6vw, 76px); line-height: 0.95; letter-spacing: -0.045em; font-weight: 900; color: #14141A;">Simpel.</h2>
-            <p style="font-size: 18px; line-height: 1.55; color: rgba(20,20,26,0.72); margin-top: 20px; max-width: 22em; text-wrap: pretty;">Alles in 1 portaal, 1 klik overzicht, 1 aanspreekpunt: geen rompslomp.</p>
-          </div>
-        </div>
-      </div>
-    </div>
   </section>
 
   <section id="reviews" style="padding: 72px 24px;">
@@ -1309,38 +1331,6 @@ function init_whats_app_modal() {
             <p style="font-size:14px;color:#94A29E;margin-top:2px;">Familieportefeuille &middot; 23 eenheden</p>
           </div>
         </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="pricing" style="padding: 80px 24px;">
-    <div style="max-width: 1040px; margin: 0 auto;">
-      <div style="max-width: 680px;">
-        <h2 style="font-size: 44px; line-height: 1.12; letter-spacing: -0.03em; font-weight: 900; color: #0E2D30;">Eén pakket, volledig ontzorgd</h2>
-        <p style="font-size: 18px; color: #63736F; margin-top: 14px;">Financieel, administratief, commercieel en technisch beheer in één hand. Door automatisering en inkoopvoordeel blijven de kosten laag en je weet altijd vooraf wat je krijgt.</p>
-      </div>
-      <div data-reveal-group="" data-stagger="120" class="m-stack" style="display: grid; grid-template-columns: 0.9fr 1.1fr; margin-top: 48px; border: 1px solid #E2E8DE; border-radius: 28px; overflow: hidden; background: #ffffff;">
-        <div class="m-pad" style="position: relative; overflow: hidden; display: flex; flex-direction: column; padding: 44px; background: #0E2D30;">
-          <span aria-hidden="true" style="position: absolute; bottom: -160px; left: -120px; width: 420px; height: 420px; border-radius: 999px; background: radial-gradient(circle, rgba(206,255,138,0.22) 0%, rgba(206,255,138,0) 65%); pointer-events: none;"></span>
-          <p style="position: relative; align-self: flex-start; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #14141A; background: #CEFF8A; padding: 6px 12px; border-radius: 999px;">Alles inbegrepen</p>
-          <p style="position: relative; font-size: 28px; font-weight: 900; letter-spacing: -0.03em; color: #ffffff; margin-top: 22px;">Volledige ontzorging</p>
-          <p style="position: relative; font-size: 16px; line-height: 1.55; color: #B4C9C7; margin-top: 10px; max-width: 24em;">Financieel, administratief, commercieel en technisch beheer. Jij hoeft niets meer te regelen.</p>
-          <p style="position: relative; font-size: 44px; font-weight: 900; letter-spacing: -0.03em; color: #ffffff; margin-top: 36px;">Op aanvraag</p>
-          <p style="position: relative; font-size: 15px; color: #B4C9C7; margin-top: 6px; margin-bottom: 36px;">Een helder voorstel op maat van je portefeuille.</p>
-          <a href="contact.html" style="position: relative; display: block; text-align: center; margin-top: auto; background: #CEFF8A; color: #14141A; font-size: 16px; font-weight: 700; padding: 15px 26px; border-radius: 999px;" style-hover="background: #DDFFA4; color: #14141A;">Plan een gesprek</a>
-        </div>
-        <div class="m-pad" style="padding: 32px 44px 30px;">
-          <div style="display: flex; flex-direction: column;">
-            <div style="display: flex; align-items: flex-start; gap: 12px; border-top: 1px solid #E2E8DE; padding: 14px 0;"><svg viewBox="0 0 20 20" aria-hidden="true" style="width: 20px; height: 20px; flex: none; margin-top: 1px;"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#4A6B2A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><p style="font-size: 16px; font-weight: 500; line-height: 1.45; color: #0E2D30;">Eigenarenportaal met realtime inzicht</p></div>
-            <div style="display: flex; align-items: flex-start; gap: 12px; border-top: 1px solid #E2E8DE; padding: 14px 0;"><svg viewBox="0 0 20 20" aria-hidden="true" style="width: 20px; height: 20px; flex: none; margin-top: 1px;"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#4A6B2A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><p style="font-size: 16px; font-weight: 500; line-height: 1.45; color: #0E2D30;">Huurincasso en jaarlijkse/maandelijkse afrekeningen</p></div>
-            <div style="display: flex; align-items: flex-start; gap: 12px; border-top: 1px solid #E2E8DE; padding: 14px 0;"><svg viewBox="0 0 20 20" aria-hidden="true" style="width: 20px; height: 20px; flex: none; margin-top: 1px;"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#4A6B2A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><p style="font-size: 16px; font-weight: 500; line-height: 1.45; color: #0E2D30;">Documentencentrum</p></div>
-            <div style="display: flex; align-items: flex-start; gap: 12px; border-top: 1px solid #E2E8DE; padding: 14px 0;"><svg viewBox="0 0 20 20" aria-hidden="true" style="width: 20px; height: 20px; flex: none; margin-top: 1px;"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#4A6B2A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><p style="font-size: 16px; font-weight: 500; line-height: 1.45; color: #0E2D30;">Rapportages</p></div>
-            <div style="display: flex; align-items: flex-start; gap: 12px; border-top: 1px solid #E2E8DE; padding: 14px 0;"><svg viewBox="0 0 20 20" aria-hidden="true" style="width: 20px; height: 20px; flex: none; margin-top: 1px;"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#4A6B2A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><p style="font-size: 16px; font-weight: 500; line-height: 1.45; color: #0E2D30;">Technisch beheer en onderhoudscoördinatie</p></div>
-            <div style="display: flex; align-items: flex-start; gap: 12px; border-top: 1px solid #E2E8DE; padding: 14px 0;"><svg viewBox="0 0 20 20" aria-hidden="true" style="width: 20px; height: 20px; flex: none; margin-top: 1px;"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#4A6B2A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><p style="font-size: 16px; font-weight: 500; line-height: 1.45; color: #0E2D30;">Huurdersservice met 24-uursbelofte</p></div>
-            <div style="display: flex; align-items: flex-start; gap: 12px; border-top: 1px solid #E2E8DE; padding: 14px 0;"><svg viewBox="0 0 20 20" aria-hidden="true" style="width: 20px; height: 20px; flex: none; margin-top: 1px;"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#4A6B2A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><p style="font-size: 16px; font-weight: 500; line-height: 1.45; color: #0E2D30;">Commerciële verhuur en huurprijsadvies</p></div>
-            <div style="display: flex; align-items: flex-start; gap: 12px; border-top: 1px solid #E2E8DE; padding: 14px 0;"><svg viewBox="0 0 20 20" aria-hidden="true" style="width: 20px; height: 20px; flex: none; margin-top: 1px;"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#4A6B2A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><p style="font-size: 16px; font-weight: 500; line-height: 1.45; color: #0E2D30;">Administratief, financieel en commercieel beheer, volledig ontzorgd</p></div>
-          </div>
         </div>
       </div>
     </div>
@@ -1398,7 +1388,7 @@ function init_whats_app_modal() {
       </div>
       <div style="display: flex; align-items: center; gap: 20px; justify-content: space-between; flex-wrap: wrap; margin-top: 36px; background: #F3F6F1; border-radius: 24px; padding: 22px 26px;">
         <div style="display: flex; align-items: center; gap: 16px;">
-          <img src="assets/img/rqbbdy_crk.jpg" alt="Sarah van het serviceteam" style="flex: none; width: 56px; height: 56px; border-radius: 999px; object-fit: cover;">
+          <img src="assets/img/h-1j967u8jerijfcrk.jpg" alt="Sarah van het serviceteam" style="flex: none; width: 56px; height: 56px; border-radius: 999px; object-fit: cover;">
           <div>
             <p style="font-size: 17px; font-weight: 700; color: #0E2D30;">Wil je direct contact? Bel ons.</p>
             <p style="font-size: 15px; color: #63736F; margin-top: 2px;">Sarah en Jesse zitten klaar, ma-vr 08:30-18:00.</p>
@@ -1416,62 +1406,62 @@ function init_whats_app_modal() {
         <h2 style="font-size: 52px; line-height: 1.04; letter-spacing: -0.035em; font-weight: 900; color: #ffffff; max-width: 12em; text-wrap: balance;">Overgestapt binnen één dag</h2>
         <p style="font-size: 19px; line-height: 1.72; color: #A9BCBA; margin-top: 26px; max-width: 30em;">Wij nemen het dossier over van je huidige beheerder, brengen je panden en huurders in het portaal en jij kijkt mee. Door onze technologie is dat meestal binnen één dag rond, dus overstappen is nooit meer een reden om te blijven zitten.</p>
         <div style="display: flex; gap: 14px; margin-top: 38px; flex-wrap: wrap;">
-          <a href="tarieven.html" style="display: inline-flex; align-items: center; background: #CEFF8A; color: #14141A; font-size: 17px; font-weight: 700; padding: 20px 34px; border-radius: 999px;" style-hover="background: #DDFFA4; color: #14141A;">Plan een gesprek</a>
-          <a href="diensten.html" style="display: inline-flex; align-items: center; color: #ffffff; font-size: 17px; font-weight: 700; padding: 20px 34px; background: rgba(255,255,255,0.14); border-radius: 999px;" style-hover="background: #ffffff; color: #132B2E;">Ontdek onze diensten</a>
+          <a href="Tarieven.dc.html" style="display: inline-flex; align-items: center; background: #CEFF8A; color: #14141A; font-size: 17px; font-weight: 700; padding: 20px 34px; border-radius: 999px;" style-hover="background: #DDFFA4; color: #14141A;">Plan een gesprek</a>
+          <a href="Diensten.dc.html" style="display: inline-flex; align-items: center; color: #ffffff; font-size: 17px; font-weight: 700; padding: 20px 34px; background: rgba(255,255,255,0.14); border-radius: 999px;" style-hover="background: #ffffff; color: #132B2E;">Ontdek onze diensten</a>
         </div>
       </div>
       <div style="position: relative; height: 520px; overflow: hidden; -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 15%, #000 85%, transparent 100%); mask-image: linear-gradient(180deg, transparent 0%, #000 15%, #000 85%, transparent 100%);">
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start;">
           <div style="display: flex; flex-direction: column; gap: 18px; animation: marquee-y-up 42s linear infinite; will-change: transform;">
           <div style="position: relative; flex: none; aspect-ratio: 3 / 4; border-radius: 22px; overflow: hidden; background: #16383B;">
-            <img src="assets/img/ll74ym_zs.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+            <img src="assets/img/h-1ui99k2wxwwn20zs.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
           </div>
           <div style="position: relative; flex: none; aspect-ratio: 3 / 4; border-radius: 22px; overflow: hidden; background: #16383B;">
-            <img src="assets/img/89y369_kvc.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+            <img src="assets/img/h-10zw2sx159rc8e3kvc.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
           </div>
           <div style="position: relative; flex: none; aspect-ratio: 3 / 4; border-radius: 22px; overflow: hidden; background: #16383B;">
-            <img src="assets/img/l8exbu_80g.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+            <img src="assets/img/h-13b9ri6932t0b280g.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
           </div>
           <div style="position: relative; flex: none; aspect-ratio: 3 / 4; border-radius: 22px; overflow: hidden; background: #16383B;">
-            <img src="assets/img/11oos8_2pk.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+            <img src="assets/img/h-1w2anky1kfypsb42pk.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
           </div>
           <div style="position: relative; flex: none; aspect-ratio: 3 / 4; border-radius: 22px; overflow: hidden; background: #16383B;">
-            <img src="assets/img/ll74ym_zs.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+            <img src="assets/img/h-1ui99k2wxwwn20zs.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
           </div>
           <div style="position: relative; flex: none; aspect-ratio: 3 / 4; border-radius: 22px; overflow: hidden; background: #16383B;">
-            <img src="assets/img/89y369_kvc.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+            <img src="assets/img/h-10zw2sx159rc8e3kvc.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
           </div>
           <div style="position: relative; flex: none; aspect-ratio: 3 / 4; border-radius: 22px; overflow: hidden; background: #16383B;">
-            <img src="assets/img/l8exbu_80g.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+            <img src="assets/img/h-13b9ri6932t0b280g.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
           </div>
           <div style="position: relative; flex: none; aspect-ratio: 3 / 4; border-radius: 22px; overflow: hidden; background: #16383B;">
-            <img src="assets/img/11oos8_2pk.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+            <img src="assets/img/h-1w2anky1kfypsb42pk.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
           </div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 18px; margin-top: -56px; animation: marquee-y-down 52s linear infinite; will-change: transform;">
           <div style="position: relative; flex: none; aspect-ratio: 3 / 4; border-radius: 22px; overflow: hidden; background: #16383B;">
-            <img src="assets/img/l8exbu_80g.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+            <img src="assets/img/h-13b9ri6932t0b280g.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
           </div>
           <div style="position: relative; flex: none; aspect-ratio: 3 / 4; border-radius: 22px; overflow: hidden; background: #16383B;">
-            <img src="assets/img/11oos8_2pk.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+            <img src="assets/img/h-1w2anky1kfypsb42pk.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
           </div>
           <div style="position: relative; flex: none; aspect-ratio: 3 / 4; border-radius: 22px; overflow: hidden; background: #16383B;">
-            <img src="assets/img/ll74ym_zs.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+            <img src="assets/img/h-1ui99k2wxwwn20zs.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
           </div>
           <div style="position: relative; flex: none; aspect-ratio: 3 / 4; border-radius: 22px; overflow: hidden; background: #16383B;">
-            <img src="assets/img/89y369_kvc.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+            <img src="assets/img/h-10zw2sx159rc8e3kvc.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
           </div>
           <div style="position: relative; flex: none; aspect-ratio: 3 / 4; border-radius: 22px; overflow: hidden; background: #16383B;">
-            <img src="assets/img/l8exbu_80g.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+            <img src="assets/img/h-13b9ri6932t0b280g.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
           </div>
           <div style="position: relative; flex: none; aspect-ratio: 3 / 4; border-radius: 22px; overflow: hidden; background: #16383B;">
-            <img src="assets/img/11oos8_2pk.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+            <img src="assets/img/h-1w2anky1kfypsb42pk.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
           </div>
           <div style="position: relative; flex: none; aspect-ratio: 3 / 4; border-radius: 22px; overflow: hidden; background: #16383B;">
-            <img src="assets/img/ll74ym_zs.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+            <img src="assets/img/h-1ui99k2wxwwn20zs.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
           </div>
           <div style="position: relative; flex: none; aspect-ratio: 3 / 4; border-radius: 22px; overflow: hidden; background: #16383B;">
-            <img src="assets/img/89y369_kvc.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+            <img src="assets/img/h-10zw2sx159rc8e3kvc.jpg" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
           </div>
           </div>
         </div>
@@ -1500,29 +1490,29 @@ function init_whats_app_modal() {
       </div>
       <div class="m-stack" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 64px; padding: 56px 0 64px; border-top: 1px solid rgba(255,255,255,0.14);">
         <div>
-          <img src="assets/img/y68von_59w.svg" alt="Prop3rty" style="height: 54px; width: auto;">
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ijg1Ljc3IDIzNC42OCA0MzkuNjMgMTQzLjYyIiBmaWxsPSIjRjdGOEY1Ij48cGF0aCBkPSJNNDg2Ljk2LDM0MC45MmwzLjk1LTEzLjY1aC04LjI2bC03LjE4LTI3LjY3di4wMmgtOS43djE3Ljk1aDEwLjQxdjkuN2gtMjIuNjJ2LTI3LjY1aC0xLjA4djEuNDRoLTYuMTFjLTEuMzEtLjAzLTIuNjEuMjgtMy43Ny45LTEuMDYuNTgtMS45MywxLjQ1LTIuNTEsMi41MS0uNjIsMS4xNi0uOTMsMi40Ni0uOSwzLjc3djE5LjAzaC0xMi4yMXYtMTEuMDJjLS4zOSwxLjM5LS45OCwyLjctMS43NiwzLjkxLTEuNTIsMi4zNy0zLjczLDQuMjUtNi42MSw1LjYyLTIuODgsMS4zOC02LjI3LDIuMDctMTAuMTcsMi4wN3MtNy4zNi0uNzItMTAuMTMtMi4xNmMtMi43OC0xLjQ0LTQuOTMtMy4zLTYuNDgtNS41OS0uMzctLjU1LS43Mi0xLjEyLTEuMDMtMS42OS0uMS4yMi0uMi40My0uMy42NC0xLjQ4LDIuOTktMy40OCw1LjI5LTYsNi44OS0yLjQ3LDEuNTktNS4zNSwyLjQzLTguMjksMi40MS0xLjYxLjAxLTMuMjEtLjI4LTQuNzEtLjg2LTEuMzctLjUyLTIuNjUtMS4yOC0zLjc3LTIuMjMtMS4wMi0uODgtMS45Mi0xLjg5LTIuNjYtMy4wMmgtLjcydjE4LjY3aC0xMi4yMXYtMjguNTZjLS40MywyLjE2LTEuMjMsNC4yMy0yLjM3LDYuMTItMS44MSwzLjAzLTQuNCw1LjUzLTcuNSw3LjIyLTMuMjYsMS43NC02LjksMi42Ni0xMC41OSwyLjY2cy03LjMzLS45MS0xMC41OS0yLjY2Yy0zLjEtMS42OS01LjY5LTQuMTktNy41LTcuMjItMS41Ni0yLjYtMi40OC01LjU0LTIuNjgtOC41Ni0uMjEtMy4wMy4zLTYuMDYsMS40OS04Ljg1aC00Ljc2Yy0xLjMxLS4wMy0yLjYxLjI4LTMuNzcuOS0xLjA2LjU4LTEuOTMsMS40NS0yLjUxLDIuNTEtLjYyLDEuMTYtLjkzLDIuNDYtLjksMy43N3YxOS4wM2gtMTIuMjF2LTM3LjM1aDExLjg1djUuMzloLjcyYy43Mi0xLjcyLDEuODgtMy4yMiwzLjM3LTQuMzQsMS41My0xLjE3LDMuNDUtMS43Niw1Ljc1LTEuNzZoMy44MXY5LjI4YzEuOC0yLjkzLDQuMzQtNS4zMyw3LjM2LTYuOTgsMy4yNi0xLjc0LDYuOS0yLjY2LDEwLjU5LTIuNjZzNy4zNC45MSwxMC41OSwyLjY2YzMuMSwxLjY5LDUuNjksNC4xOCw3LjUsNy4yMiwxLjE0LDEuODksMS45NCwzLjk2LDIuMzcsNi4xMnYtMTQuOTJoMTIuMjF2NS4wM2guNzJjLjc0LTEuMTMsMS42My0yLjE0LDIuNjYtMy4wMiwxLjEyLS45NSwyLjQtMS43LDMuNzctMi4yMywxLjUtLjU4LDMuMS0uODcsNC43MS0uODYsMi45NC0uMDIsNS44Mi44MSw4LjI5LDIuNDEsMi41MSwxLjYsNC41MSwzLjksNiw2Ljg5LDEuNDksMi45OSwyLjIzLDYuNDgsMi4yMywxMC40NSwwLDEuMzQtLjA5LDIuNjgtLjI3LDQuMDFoOC4zN2MuNDUsMS40NCwxLjM2LDIuNywyLjU4LDMuNTksMS4yOS45OSwyLjk3LDEuNDksNS4wNSwxLjQ5LDEuMjkuMDMsMi41Ny0uMjIsMy43NS0uNzMuOTctLjQyLDEuODEtMS4xLDIuNDEtMS45Ny41NC0uOC44My0xLjc0LjgzLTIuNywwLS45NC0uMjktMS44Ni0uODMtMi42NC0uNjEtLjg3LTEuNDQtMS41Ny0yLjQxLTItMS4xOC0uNTMtMi40Ni0uNzktMy43NS0uNzZoLTEwLjE2di03LjYybDEwLjE2LTYuMzV2LS42NGgtMTcuMTV2LTEwLjE3aDMzLjM2djEwLjE3bC05Ljg1LDYuMDQtLjcuMjZ2Ljc2bC4xMy0uMDZjMi4zNy0uMDMsNC43LjU2LDYuNzcsMS43MiwyLjksMS42NCw1LjA0LDQuMzQsNS45OSw3LjUzdi0xOC41OGgxMS44NXY1LjM5aC43MmMuNzItMS43MiwxLjg4LTMuMjIsMy4zOC00LjM0LDEuNTMtMS4xNywzLjQ1LTEuNzYsNS43NS0xLjc2aDMuODF2LjcyaDEuMDh2LTcuOWgxMi4yMXY3LjloMTkuNzVsNi40NiwyNi45M2gyLjE1bDcuMTgtMjYuOTNoMTIuNTdsLTE0LjM2LDUwLjk5aC0xMi41N1pNMzY4LjEzLDMwMC4zNGMtMS4yMS43Ni0yLjE3LDEuODYtMi43NiwzLjE2LS42NywxLjM5LTEsMy4wOS0xLjAxLDUuMSwwLDIuMDEuMzMsMy43MSwxLjAxLDUuMS41OSwxLjMsMS41NSwyLjQsMi43NiwzLjE2LDEuMjYuNzEsMi42OCwxLjA4LDQuMTMsMS4wOHMyLjg3LS4zNyw0LjEzLTEuMDhjMS4yMS0uNzYsMi4xNy0xLjg2LDIuNzYtMy4xNi42Ny0xLjM5LDEuMDEtMy4wOSwxLjAxLTUuMSwwLTIuMDEtLjM0LTMuNzEtMS4wMS01LjEtLjU5LTEuMy0xLjU1LTIuNC0yLjc2LTMuMTYtMS4yNi0uNzEtMi42OC0xLjA4LTQuMTMtMS4wOHMtMi44Ny4zNy00LjEzLDEuMDhaTTMyNy40NSwzMDAuNDFjLTEuMjcuNzktMi4yOSwxLjkzLTIuOTUsMy4yNy0uNzEsMS41NC0xLjA4LDMuMjItMS4wOCw0Ljkycy4zNywzLjM4LDEuMDgsNC45MmMuNjYsMS4zNCwxLjY4LDIuNDgsMi45NSwzLjI3LDEuMjcuNzksMi43NCwxLjIxLDQuMjMsMS4yMXMyLjk2LS40Miw0LjIzLTEuMjFjMS4yNy0uNzksMi4yOS0xLjkzLDIuOTUtMy4yNy43MS0xLjU0LDEuMDgtMy4yMiwxLjA4LTQuOTJzLS4zNy0zLjM4LTEuMDgtNC45MmMtLjUxLS45OS0xLjIyLTEuODYtMi4wOC0yLjU3LS44Ni0uNzEtMS44Ni0xLjIzLTIuOTMtMS41My0xLjA3LS4zMS0yLjE5LS4zOS0zLjI5LS4yNS0xLjEuMTQtMi4xNy41MS0zLjEyLDEuMDhaTTI0Mi45OSwzMjcuMjh2LTUwLjI3aDI0LjQyYzQuMDcsMCw3LjY4LjgxLDEwLjg0LDIuNDQsMy4xNiwxLjYzLDUuNjEsMy44NCw3LjM2LDYuNjQsMS43MSwyLjc3LDIuNjIsNS45NywyLjYyLDkuMjNzLS45MSw2LjQ2LTIuNjIsOS4yM2MtMS43NSwyLjgtNC4yLDUuMDItNy4zNiw2LjY0cy02Ljc3LDIuNDQtMTAuODQsMi40NGgtMTEuMTN2MTMuNjVoLTEzLjI5Wk0yNTYuMjgsMzAxLjQyaDEwLjc3YzIuNDQsMCw0LjMxLS41NSw1LjYtMS42NSwxLjI5LTEuMSwxLjk0LTIuNTksMS45NC00LjQ1cy0uNjUtMy4zNS0xLjk0LTQuNDVjLTEuMjktMS4xLTMuMTYtMS42NS01LjYtMS42NWgtMTAuNzd2MTIuMjFaIj48L3BhdGg+PHBhdGggZD0iTTIwNC4yLDI2NS40MmMyLjU3LDEuNDYsNC42MywzLjU5LDUuNzQsNi4zOGwxMC40OSwzMi4yOGMuNzYsMy41LS4yNiw3LjA2LTIuMjksOS45NGwtMzYuNTMsNDIuODRjLTQuNjksNS4wNi05Ljk2LDMuOS0xNS44MiwyLjI5LS4xNy0uMDUtLjczLS4xNi0uOC0uMjZsLTkuMjctMjguNDhjLTEuNTQtNS44Ni44NS0xMS44Miw2LjY3LTE0LjA4LDQuNTQtMS43Niw5LjY5LTIuNzgsMTQuMTctNC42LDYuMjYtMi41NCw3LjA1LTExLjA5LjkxLTE0LjI5LTMuNDYtMS44LTYuNTItLjE4LTkuOTEuOS02LjEyLDEuOTUtMTIuMjYsMy44OS0xOC4zNyw1Ljk3LTUuMTUsMS43NS03Ljc2LDUuMjYtNi41OSwxMC44MmwxMy40Myw0MS4yOS0uMDQuMzQtMzkuOTYtOS43MWMtMy40Ny0xLjE1LTYuMzctMy40NC03LjgxLTYuODlsLTEwLjEzLTMxLjE2Yy0xLjEyLTQuMjQtLjE1LTguNTQsMi41NC0xMS45NSwxMS42LTEzLjcyLDIzLjQ4LTI3LjE5LDM1LjQ2LTQwLjU5LDEuNTMtMS41NSwzLjQtMi43NCw1LjQ2LTMuNDYsMi4wNi0uNzIsNC4yNi0uOTYsNi40My0uNywxNC4yNCwyLjk0LDI4LjQ1LDUuOTcsNDIuNiw5LjMxLDMuNDkuODIsNy43LDEuNTYsMTEuMDUsMi42My45LjMxLDEuNzYuNzEsMi41OCwxLjE5TTE5MC4xMywzMTIuODhjLTEuODUsMy42Ny01LjM0LDcuMi05LjIyLDguNzQtNC4xMSwxLjYyLTguNzIsMi42MS0xMi44OCw0LjE4LTEuMTMuNTYtMS44MywxLjY1LTEuNTcsMi45M2w1LjgzLDE3Ljk1Yy41NiwxLjMsMi4xMywxLjc2LDMuMTMuNjYsOS43My0xMS40OCwxOS41Ni0yMi44NywyOS4yNi0zNC4zNywyLjM4LTIuODMsNS4zMS01LjIzLDQuMjgtOS40MmwtOC4wNC0yNC43MmMtLjQ2LTEuMDQtMS4xMy0xLjk4LTEuOTgtMi43NC0uODUtLjc2LTEuODUtMS4zMy0yLjk0LTEuNjgtMy40LS45OC03LjM5LTEuNTktMTAuODktMi4zOC0xMC4wOC0yLjI4LTIwLjE1LTQuNjctMzAuMjUtNi44NC00Ljk1LTEuMDYtOC45NC0yLjU5LTEzLjA2LDEuNjNsLTMxLjM3LDM2LjA5Yy0uOTUsMS40Ny0xLjM4LDMuMjMtMS4yMSw0Ljk3LDIuNjksOC44Miw1LjUyLDE3LjY4LDguNTksMjYuMzcuNzMsMS4xOCwxLjgyLDIuMSwzLjEsMi42M2wxNy4yMyw0LjI4Yy43NywwLDEuMTgtLjY4LDEuMDctMS4zOS0yLjIyLTcuNzEtNS4zOC0xNS4zOC03LjUxLTIzLjA5LTEuMjUtNC41Mi0uOS05LjU2LDEuOTEtMTMuNDIsMi40Mi0zLjMxLDUuNzEtNi45OSw5LjYxLTguNWwyNy41Ni04Ljk1YzE1LjMyLTIuOTUsMjYuMjEsMTMuNDEsMTkuMzQsMjcuMDgiPjwvcGF0aD48cGF0aCBkPSJNNTIxLjQxLDI5Ny45M2MtLjcxLDAtMS40MS0uMTctMi4wMi0uNTItLjYtLjM0LTEuMDktLjgyLTEuNDQtMS40MS0uMzUtLjU5LS41My0xLjI3LS41My0xLjk1LDAtLjY5LjE4LTEuMzYuNTMtMS45NS4zNS0uNTkuODUtMS4wNywxLjQ0LTEuNDEuNjItLjM1LDEuMzEtLjUzLDIuMDItLjUyLjcxLDAsMS40MS4xNywyLjAyLjUyLjYuMzQsMS4wOS44MiwxLjQ0LDEuNDEuMzUuNTkuNTMsMS4yNy41MywxLjk1LDAsLjY5LS4xOCwxLjM2LS41MywxLjk1LS4zNS41OS0uODUsMS4wNy0xLjQ0LDEuNDEtLjYyLjM1LTEuMzEuNTMtMi4wMi41MlpNNTIxLjQxLDI5Ni44OWMuNTIsMCwxLjA0LS4xMiwxLjUtLjM2LjQzLS4yMy43OC0uNTgsMS4wMi0xLjAxLjI1LS40NS4zOC0uOTYuMzctMS40OCwwLS41Mi0uMTItMS4wMi0uMzctMS40OC0uMjQtLjQzLS41OS0uNzgtMS4wMi0xLjAxLS40Ni0uMjUtLjk4LS4zNy0xLjUtLjM2LS41MiwwLTEuMDQuMTItMS41LjM2LS40My4yMy0uNzguNTgtMS4wMiwxLjAxLS4yNS40NS0uMzguOTYtLjM3LDEuNDgsMCwuNTIuMTIsMS4wMi4zNywxLjQ4LjI0LjQzLjU5Ljc4LDEuMDIsMS4wMS40Ni4yNS45OC4zNywxLjUuMzZoMFpNNTE5Ljg5LDI5NS43NXYtMy42MmgxLjdjLjQzLS4wMy44Ny4wOSwxLjIyLjM1LjE0LjEyLjI1LjI3LjMyLjQ0LjA3LjE3LjEuMzUuMDkuNTQsMCwuMjUtLjA2LjQ5LS4yLjctLjEzLjE4LS4zLjMyLS41LjQxbC44MSwxLjE4aC0xLjE4bC0uNy0xaC0uNDh2MWgtMS4wN1pNNTIxLjU5LDI5My44NmMuMTQsMCwuMjctLjAzLjM5LS4xLjA0LS4wMy4wOC0uMDguMS0uMTIuMDItLjA1LjA0LS4xLjAzLS4xNiwwLS4wNiwwLS4xMS0uMDMtLjE2LS4wMi0uMDUtLjA2LS4wOS0uMS0uMTMtLjExLS4wOC0uMjUtLjExLS4zOS0uMWgtLjYzdi43OGguNjNaIj48L3BhdGg+PC9zdmc+" alt="Prop3rty" style="height: 54px; width: auto;">
           <p style="font-size: 24px; line-height: 1.4; font-weight: 700; letter-spacing: -0.02em; color: #ffffff; margin-top: 26px;">Persoonlijk waar het telt.<br>Slim waar het kan.</p>
         </div>
         <div class="m-cols" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;">
           <div>
             <p style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.5);">Pagina's</p>
             <div style="display: flex; flex-direction: column; gap: 13px; margin-top: 20px;">
-              <a href="index.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Home</a>
-              <a href="diensten.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Diensten</a>
-              <a href="platform.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Platform</a>
-              <a href="tarieven.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Tarieven</a>
-              <a href="over-ons.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Over ons</a>
-              <a href="contact.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Contact</a>
+              <a href="index.dc.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Home</a>
+              <a href="Diensten.dc.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Diensten</a>
+              <a href="Platform.dc.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Platform</a>
+              <a href="Tarieven.dc.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Tarieven</a>
+              <a href="Over ons.dc.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Over ons</a>
+              <a href="Contact.dc.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Contact</a>
             </div>
           </div>
           <div>
             <p style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.5);">Portaal</p>
             <div style="display: flex; flex-direction: column; gap: 13px; margin-top: 20px;">
-              <a href="portaal.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Eigenarenportaal</a>
-              <a href="portaal.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Huurdersportaal</a>
-              <a href="platform.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Documenten</a>
+              <a href="Prop3rty Portaal.dc.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Eigenarenportaal</a>
+              <a href="Prop3rty Portaal.dc.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Huurdersportaal</a>
+              <a href="Platform.dc.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Documenten</a>
               <a href="https://vastgoed-portal-sepia.vercel.app/login" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Inloggen</a>
-              <a href="portaal.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Account aanmaken</a>
+              <a href="Prop3rty Portaal.dc.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Account aanmaken</a>
             </div>
           </div>
           <div>
@@ -1537,8 +1527,8 @@ function init_whats_app_modal() {
       <div style="display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 26px 0 32px; border-top: 1px solid rgba(255,255,255,0.14); flex-wrap: wrap;">
         <p style="font-size: 14px; color: rgba(255,255,255,0.55);">&copy; 2026 Prop3rty. Alle rechten voorbehouden. &middot; Made by Mr. Boost</p>
         <div style="display: flex; align-items: center; gap: 22px;">
-          <a href="contact.html" style="font-size: 14px; color: rgba(255,255,255,0.55);" style-hover="color: #CEFF8A;">Privacybeleid</a>
-          <a href="contact.html" style="font-size: 14px; color: rgba(255,255,255,0.55);" style-hover="color: #CEFF8A;">Voorwaarden</a>
+          <a href="Contact.dc.html" style="font-size: 14px; color: rgba(255,255,255,0.55);" style-hover="color: #CEFF8A;">Privacybeleid</a>
+          <a href="Contact.dc.html" style="font-size: 14px; color: rgba(255,255,255,0.55);" style-hover="color: #CEFF8A;">Voorwaarden</a>
           <div style="display: flex; align-items: center; gap: 10px;">
             <a href="https://nl.linkedin.com/company/prop3rty" target="_blank" rel="noopener" aria-label="LinkedIn" style="display: grid; place-items: center; width: 38px; height: 38px; border-radius: 999px; background: rgba(255,255,255,0.1);" style-hover="background: rgba(206,255,138,0.25);"><svg viewBox="0 0 20 20" aria-hidden="true" style="width: 18px; height: 18px;" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="14" height="14" rx="3"></rect><path d="M6.6 8.6v5"></path><path d="M6.6 6.3v.1"></path><path d="M9.8 13.6v-5"></path><path d="M9.8 10.6c0-1.1.8-2 1.9-2s1.9.9 1.9 2v3"></path></svg></a>
             <a href="https://www.instagram.com/prop3rty.nl/" target="_blank" rel="noopener" aria-label="Instagram" style="display: grid; place-items: center; width: 38px; height: 38px; border-radius: 999px; background: rgba(255,255,255,0.1);" style-hover="background: rgba(206,255,138,0.25);"><svg viewBox="0 0 20 20" aria-hidden="true" style="width: 18px; height: 18px;" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="14" height="14" rx="4"></rect><circle cx="10" cy="10" r="3.2"></circle><path d="M13.9 6.1v.1"></path></svg></a>
@@ -1549,8 +1539,8 @@ function init_whats_app_modal() {
   </footer>
 </div>
   <div id="sob-wrap" style="position: fixed; right: 20px; bottom: 96px; z-index: 89; width: 120px; height: 120px; opacity: 0; transform: scale(0.6) rotate(-20deg); pointer-events: none; transition: opacity 0.45s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);">
-    <a href="contact.html" aria-label="Sell or Buy your Prop3rty" style="position: absolute; inset: 0; display: grid; place-items: center; color: #0E2D30; transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);" style-hover="transform: scale(1.07); color: #0E2D30;">
-      <svg viewBox="0 0 100 100" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; animation: sob-spin 26s linear infinite; filter: drop-shadow(0 14px 22px rgba(14,45,48,0.28));"><polygon points="50.00,0.00 58.39,7.83 69.13,3.81 73.89,14.25 85.36,14.64 85.75,26.11 96.19,30.87 92.17,41.61 100.00,50.00 92.17,58.39 96.19,69.13 85.75,73.89 85.36,85.36 73.89,85.75 69.13,96.19 58.39,92.17 50.00,100.00 41.61,92.17 30.87,96.19 26.11,85.75 14.64,85.36 14.25,73.89 3.81,69.13 7.83,58.39 0.00,50.00 7.83,41.61 3.81,30.87 14.25,26.11 14.64,14.64 26.11,14.25 30.87,3.81 41.61,7.83" fill="#CEFF8A" stroke="#0E2D30" stroke-width="1.2" stroke-linejoin="round"></polygon></svg>
+    <a href="Contact.dc.html" aria-label="Sell or Buy your Prop3rty" style="position: absolute; inset: 0; display: grid; place-items: center; color: #0E2D30; transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);" style-hover="transform: scale(1.07); color: #0E2D30;">
+      <svg viewBox="0 0 100 100" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; animation: sob-spin 26s linear infinite; "><polygon points="50.00,0.00 58.39,7.83 69.13,3.81 73.89,14.25 85.36,14.64 85.75,26.11 96.19,30.87 92.17,41.61 100.00,50.00 92.17,58.39 96.19,69.13 85.75,73.89 85.36,85.36 73.89,85.75 69.13,96.19 58.39,92.17 50.00,100.00 41.61,92.17 30.87,96.19 26.11,85.75 14.64,85.36 14.25,73.89 3.81,69.13 7.83,58.39 0.00,50.00 7.83,41.61 3.81,30.87 14.25,26.11 14.64,14.64 26.11,14.25 30.87,3.81 41.61,7.83" fill="#CEFF8A" stroke="#0E2D30" stroke-width="1.2" stroke-linejoin="round"></polygon></svg>
       <span data-sob-t="" style="position: relative; display: block; text-align: center; font-size: 14px; line-height: 1.02; font-weight: 900; letter-spacing: -0.02em; color: #0E2D30; transform: rotate(-9deg);">Sell or Buy<br>your Prop3rty</span>
     </a>
     <button id="sob-close" type="button" aria-label="Verberg" style="position: absolute; top: 2px; left: 2px; width: 26px; height: 26px; border-radius: 999px; border: none; background: #0E2D30; color: #F6F9F4; font-size: 15px; line-height: 1; font-weight: 700; cursor: pointer; display: grid; place-items: center; padding: 0; box-shadow: 0 4px 10px rgba(14,45,48,0.25);">×</button>
@@ -1608,7 +1598,7 @@ class Component extends DCLogic {
 
   closeDemo() {
     const v = document.querySelector('video[data-demo-video]');
-    if (v) { try { v.pause(); v.muted = true; v.volume = 0; v._demoAttached = 0; } catch (e) {} }
+    if (v) { try { v.pause(); if (!v._soundOn) v.muted = true; if (!v._soundOn) v.volume = 0; v._demoAttached = 0; } catch (e) {} }
     if (this._demoHls) { try { this._demoHls.destroy(); } catch (e) {} this._demoHls = null; }
     if (this._demoT) clearTimeout(this._demoT);
     if (this._demoKey) { window.removeEventListener('keydown', this._demoKey); this._demoKey = null; }
@@ -1617,7 +1607,73 @@ class Component extends DCLogic {
   }
 
 
+  toggleSound = () => {
+    const v = document.querySelector('[data-sound-video]');
+    if (!v) return;
+    const on = !this.state.soundOn;
+    v._soundOn = on;
+    v.defaultMuted = !on; v.muted = !on; v.volume = on ? 1 : 0;
+    if (on && v.paused) v.play().catch(() => {});
+    this.setState({ soundOn: on });
+  };
+
+  bootLogoWall() {
+    if (!window.gsap || !window.ScrollTrigger) { this._lwT = setTimeout(() => this.bootLogoWall(), 150); return; }
+    gsap.registerPlugin(ScrollTrigger);
+    const loopDelay = 1.5, duration = 0.9;
+    document.querySelectorAll('[data-logo-wall-cycle-init]').forEach(root => {
+      if (root._lwInit) return; root._lwInit = true;
+      const list = root.querySelector('[data-logo-wall-list]');
+      const items = Array.from(list.querySelectorAll('[data-logo-wall-item]'));
+      const shuffleFront = root.getAttribute('data-logo-wall-shuffle') !== 'false';
+      const originalTargets = items.map(item => item.querySelector('[data-logo-wall-target]')).filter(Boolean);
+      let visibleItems = [], visibleCount = 0, pool = [], pattern = [], patternIndex = 0, tl;
+      const isVisible = el => window.getComputedStyle(el).display !== 'none';
+      const shuffleArray = arr => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+      const setup = () => {
+        if (tl) tl.kill();
+        visibleItems = items.filter(isVisible);
+        visibleCount = visibleItems.length;
+        pattern = shuffleArray(Array.from({ length: visibleCount }, (_, i) => i));
+        patternIndex = 0;
+        items.forEach(item => item.querySelectorAll('[data-logo-wall-target]').forEach(old => old.remove()));
+        pool = originalTargets.map(n => n.cloneNode(true));
+        let front, rest;
+        if (shuffleFront) { const s = shuffleArray(pool); front = s.slice(0, visibleCount); rest = shuffleArray(s.slice(visibleCount)); }
+        else { front = pool.slice(0, visibleCount); rest = shuffleArray(pool.slice(visibleCount)); }
+        pool = front.concat(rest);
+        for (let i = 0; i < visibleCount; i++) {
+          const parent = visibleItems[i].querySelector('[data-logo-wall-target-parent]') || visibleItems[i];
+          parent.appendChild(pool.shift());
+        }
+        tl = gsap.timeline({ repeat: -1, repeatDelay: loopDelay });
+        tl.call(swapNext);
+        tl.play();
+      };
+      const swapNext = () => {
+        if (items.filter(isVisible).length !== visibleCount) { setup(); return; }
+        if (!pool.length) return;
+        const idx = pattern[patternIndex % visibleCount];
+        patternIndex++;
+        const container = visibleItems[idx];
+        if (container.matches(':hover')) return;
+        const parent = container.querySelector('[data-logo-wall-target-parent]') || container;
+        if (parent.querySelectorAll('[data-logo-wall-target]').length > 1) return;
+        const current = parent.querySelector('[data-logo-wall-target]');
+        const incoming = pool.shift();
+        gsap.set(incoming, { yPercent: 50, autoAlpha: 0 });
+        parent.appendChild(incoming);
+        if (current) gsap.to(current, { yPercent: -50, autoAlpha: 0, duration, ease: 'expo.inOut', onComplete: () => { current.remove(); pool.push(current); } });
+        gsap.to(incoming, { yPercent: 0, autoAlpha: 1, duration, delay: 0.1, ease: 'expo.inOut' });
+      };
+      setup();
+      ScrollTrigger.create({ trigger: root, start: 'top bottom', end: 'bottom top', onEnter: () => tl.play(), onLeave: () => tl.pause(), onEnterBack: () => tl.play(), onLeaveBack: () => tl.pause() });
+      document.addEventListener('visibilitychange', () => document.hidden ? tl.pause() : tl.play());
+    });
+  }
+
   componentDidMount() {
+    this.bootLogoWall();
     const boot = () => {
       this._boots = (this._boots || 0) + 1;
       if (this._boots > 25) return;
@@ -1761,8 +1817,8 @@ class Component extends DCLogic {
         const vr = v.getBoundingClientRect();
         if (vr.bottom < -400 || vr.top > window.innerHeight + 400) { if (v._attached && !v.paused) v.pause(); return; }
         if (v._attached && (v.readyState >= 1 || (v.buffered && v.buffered.length > 0))) {
-          v.muted = true; v.volume = 0; if (v.paused && v.play) v.play().catch(() => {});
-          if (v.hasAttribute('data-hq') && v.readyState >= 3 && v._hls && v._hls.levels && v._hls.levels.length) {
+          if (!v._soundOn) v.muted = true; if (!v._soundOn) v.volume = 0; if (v.paused && v.play) v.play().catch(() => {});
+          if (v.readyState >= 3 && v._hls && v._hls.levels && v._hls.levels.length) {
             const top = v._topLevel != null ? v._topLevel : v._hls.levels.length - 1;
             if (v._hls.loadLevel !== top) { try { v._hls.loadLevel = top; v._hls.nextLevel = top; } catch (e) {} }
           }
@@ -1770,14 +1826,14 @@ class Component extends DCLogic {
         }
         const src = v.getAttribute('data-hls');
         if (!src) return;
-        v.muted = true; v.defaultMuted = true; v.volume = 0; v.loop = true; v.playsInline = true; v.autoplay = true;
+        if (!v._soundOn) v.muted = true; if (!v._soundOn) v.defaultMuted = true; if (!v._soundOn) v.volume = 0; v.loop = true; v.playsInline = true; v.autoplay = true;
         v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
         if (window.Hls && Hls.isSupported()) {
           if (v._hls) { try { v._hls.destroy(); } catch (e) {} }
           const h = new Hls({
             preferManagedMediaSource: false,
             maxBufferLength: 20,
-            capLevelToPlayerSize: !v.hasAttribute('data-hq'),
+            capLevelToPlayerSize: false,
             abrEwmaDefaultEstimate: 8000000,
             startFragPrefetch: true,
             startLevel: -1
@@ -1789,8 +1845,7 @@ class Component extends DCLogic {
             const top = h.levels.reduce((b, l, i) => (l.height || 0) > (h.levels[b].height || 0) ? i : b, 0);
             let quick = 0;
             h.levels.forEach((l, i) => { if ((l.height || 0) <= 480 && (l.height || 0) > (h.levels[quick].height || 0)) quick = i; });
-            h.startLevel = quick;
-            if (!v.hasAttribute('data-hq')) return;
+            h.startLevel = top;
             v._topLevel = top;
             const up = () => { try { h.loadLevel = top; h.nextLevel = top; } catch (e) {} v.removeEventListener('playing', up); };
             v.addEventListener('playing', up);
@@ -1799,7 +1854,7 @@ class Component extends DCLogic {
         } else if (v.canPlayType('application/vnd.apple.mpegurl')) {
           v.src = src; v._attached = 1;
         } else return;
-        const play = () => { v.muted = true; v.volume = 0; if (v.paused && v.play) v.play().catch(() => {}); };
+        const play = () => { if (!v._soundOn) v.muted = true; if (!v._soundOn) v.volume = 0; if (v.paused && v.play) v.play().catch(() => {}); };
         v.addEventListener('loadedmetadata', play);
         v.addEventListener('canplay', play);
         play();
@@ -2492,6 +2547,10 @@ class Component extends DCLogic {
     v.openDemo = () => { this.setState({ demoOpen: true }); this.attachDemo(0); };
     v.closeDemo = () => this.closeDemo();
     v.stopDemoClick = (e) => e.stopPropagation();
+    v.toggleSound = this.toggleSound;
+    v.soundOnAttr = this.state && this.state.soundOn ? '1' : '0';
+    v.soundLabel = this.state && this.state.soundOn ? 'Geluid uit' : 'Geluid aan';
+    v.soundIconPath = this.state && this.state.soundOn ? 'M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11' : 'M16 9.5l5 5M21 9.5l-5 5';
     return v;
   }
 }

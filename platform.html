@@ -10,6 +10,13 @@
 <x-dc>
 <helmet>
 <style>
+  a, button, [role="button"], input[type="submit"], .whatsapp-modal__fab, #sob-wrap, #sob-wrap * { box-shadow: none !important; }
+  #sob-wrap svg { filter: none !important; }
+  @media (max-width: 767px) {
+    section:not(#top) { padding-top: 56px !important; padding-bottom: 56px !important; }
+    section[style*="100svh"]:not(#top) { min-height: 0 !important; }
+    [style*="padding: 120px 0 110px"] { padding-top: 0 !important; padding-bottom: 0 !important; }
+  }
   @font-face { font-family: 'Satoshi'; src: url(assets/fonts/satoshi-110d7f0_afg.otf) format('opentype'); font-weight: 300; font-display: swap; }
   @font-face { font-family: 'Satoshi'; src: url(assets/fonts/satoshi-k7cm0d_fsw.otf) format('opentype'); font-weight: 500; font-display: swap; }
   @font-face { font-family: 'Satoshi'; src: url(assets/fonts/satoshi-10alh2z_f3k.otf) format('opentype'); font-weight: 700; font-display: swap; }
@@ -1118,6 +1125,7 @@ function init_whats_app_modal() {
   // ---- enter (page load after a transition) ----
   var pending = null;
   try { pending = sessionStorage.getItem(KEY); sessionStorage.removeItem(KEY); } catch (e) {}
+  pending = null;
 
   function cover() {
     var o = parts(build());
@@ -1167,7 +1175,7 @@ function init_whats_app_modal() {
 
   // ---- leave (link click) ----
   function leave(href) {
-    if (busy) return; busy = true;
+    window.location.href = href; return;
     var o = parts(build());
     o.top.style.transform = 'scaleY(0)';
     o.bottom.style.transform = 'scaleY(1)';
@@ -1684,8 +1692,7 @@ function init_whats_app_modal() {
     <section style="padding: 80px 24px;">
     <div style="max-width:1200px;margin:0 auto;">
       <div style="max-width:620px;margin:0 auto 40px;text-align:center;" data-reveal="">
-        <p style="font-size:13px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#63736F;">In beeld</p>
-        <h2 style="font-size:44px;line-height:1.12;letter-spacing:-0.03em;font-weight:900;color:#0E2D30;margin-top:14px;">Het portaal, in de praktijk</h2>
+        <h2 style="font-size:44px;line-height:1.12;letter-spacing:-0.03em;font-weight:900;color:#0E2D30;">Het portaal, in de praktijk</h2>
         <p style="font-size:18px;line-height:1.6;color:#63736F;margin-top:14px;">Panden in beheer, mensen op locatie en eigenaren die precies weten waar hun portefeuille staat.</p>
       </div>
       <div class="m-cols" style="display:grid;grid-template-columns:1.45fr 1fr;gap:20px;">
