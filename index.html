@@ -603,7 +603,7 @@ function init_whats_app_modal() {
 // Prop3rty page transition — Curved Wipe (adapted from Osmo Supply resource)
 (function () {
   var EASE = 'cubic-bezier(0.625, 0.05, 0, 1)';
-  var NAMES = ['index.dc.html', 'Oude landingspagina.dc.html', 'Diensten.dc.html', 'Platform.dc.html', 'Tarieven.dc.html', 'Over ons.dc.html', 'Contact.dc.html', 'Prop3rty Portaal.dc.html', '404.dc.html'];
+  var NAMES = ['index.html', 'landing-alt.html', 'diensten.html', 'platform.html', 'tarieven.html', 'over-ons.html', 'contact.html', 'portaal.html', '404.html'];
   var KEY = 'p3-transition';
   var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var busy = false;
@@ -795,13 +795,13 @@ function init_whats_app_modal() {
     '@media (max-width: 1040px) { #topbar { display: none !important; } #header-pill #menu-btn { display: none !important; } .hamburger-nav { top: 24px; right: 38px; } .hamburger-nav__bg { width: 44px; height: 44px; } .hamburger-nav__toggle { width: 44px; height: 44px; } #header-pill { justify-content: center !important; height: 64px !important; padding: 0 14px !important; } #header-pill svg[role="img"], #header-pill a > img { height: 34px !important; } #header-call { display: flex !important; } }'
   ].join('\n');
   var LINKS = [
-    ['Home', 'index.dc.html'],
-    ['Diensten', 'Diensten.dc.html'],
-    ['Platform', 'Platform.dc.html'],
-    ['Tarieven', 'Tarieven.dc.html'],
-    ['Over ons', 'Over ons.dc.html'],
-    ['Contact', 'Contact.dc.html'],
-    ['Mijn Prop3rty', 'Prop3rty Portaal.dc.html']
+    ['Home', 'index.html'],
+    ['Diensten', 'diensten.html'],
+    ['Platform', 'platform.html'],
+    ['Tarieven', 'tarieven.html'],
+    ['Over ons', 'over-ons.html'],
+    ['Contact', 'contact.html'],
+    ['Mijn Prop3rty', 'portaal.html']
   ];
   function build() {
     if (document.getElementById('scaling-nav')) return;
@@ -895,19 +895,19 @@ function init_whats_app_modal() {
   <header style="position: sticky; top: 0; z-index: 40; padding: 14px 24px 0;">
     <div id="header-pill" style="position: relative; max-width: 1200px; margin: 0 auto; padding: 0 14px 0 24px; height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 24px; background: rgba(255,255,255,0.68); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); border: 1px solid rgba(226,232,222,0.85); border-radius: 999px; box-shadow: 0 14px 40px rgba(14,45,48,0.08);">
       <a id="header-call" href="tel:0203242188" aria-label="Bel Prop3rty" style="display: none; align-items: center; justify-content: center; width: 44px; height: 44px; flex: none; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: #ECF1EA; border-radius: 999px;"><svg viewBox="0 0 20 20" aria-hidden="true" style="width: 19px; height: 19px;" fill="none" stroke="#0E2D30" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3.5h3l1.5 4-2 1.5a11 11 0 0 0 4.5 4.5l1.5-2 4 1.5v3a1.5 1.5 0 0 1-1.6 1.5C8.6 17 3 11.4 2.5 5.1A1.5 1.5 0 0 1 4 3.5Z"></path></svg></a>
-      <a href="index.dc.html" style="display: flex; align-items: center; gap: 10px; color: #0E2D30;">
+      <a href="index.html" style="display: flex; align-items: center; gap: 10px; color: #0E2D30;">
         <svg viewBox="85.77 234.68 439.63 143.62" role="img" aria-label="Prop3rty" style="height: 42px; width: auto; fill: #0E2D30;"><path d="M486.96,340.92l3.95-13.65h-8.26l-7.18-27.67v.02h-9.7v17.95h10.41v9.7h-22.62v-27.65h-1.08v1.44h-6.11c-1.31-.03-2.61.28-3.77.9-1.06.58-1.93,1.45-2.51,2.51-.62,1.16-.93,2.46-.9,3.77v19.03h-12.21v-11.02c-.39,1.39-.98,2.7-1.76,3.91-1.52,2.37-3.73,4.25-6.61,5.62-2.88,1.38-6.27,2.07-10.17,2.07s-7.36-.72-10.13-2.16c-2.78-1.44-4.93-3.3-6.48-5.59-.37-.55-.72-1.12-1.03-1.69-.1.22-.2.43-.3.64-1.48,2.99-3.48,5.29-6,6.89-2.47,1.59-5.35,2.43-8.29,2.41-1.61.01-3.21-.28-4.71-.86-1.37-.52-2.65-1.28-3.77-2.23-1.02-.88-1.92-1.89-2.66-3.02h-.72v18.67h-12.21v-28.56c-.43,2.16-1.23,4.23-2.37,6.12-1.81,3.03-4.4,5.53-7.5,7.22-3.26,1.74-6.9,2.66-10.59,2.66s-7.33-.91-10.59-2.66c-3.1-1.69-5.69-4.19-7.5-7.22-1.56-2.6-2.48-5.54-2.68-8.56-.21-3.03.3-6.06,1.49-8.85h-4.76c-1.31-.03-2.61.28-3.77.9-1.06.58-1.93,1.45-2.51,2.51-.62,1.16-.93,2.46-.9,3.77v19.03h-12.21v-37.35h11.85v5.39h.72c.72-1.72,1.88-3.22,3.37-4.34,1.53-1.17,3.45-1.76,5.75-1.76h3.81v9.28c1.8-2.93,4.34-5.33,7.36-6.98,3.26-1.74,6.9-2.66,10.59-2.66s7.34.91,10.59,2.66c3.1,1.69,5.69,4.18,7.5,7.22,1.14,1.89,1.94,3.96,2.37,6.12v-14.92h12.21v5.03h.72c.74-1.13,1.63-2.14,2.66-3.02,1.12-.95,2.4-1.7,3.77-2.23,1.5-.58,3.1-.87,4.71-.86,2.94-.02,5.82.81,8.29,2.41,2.51,1.6,4.51,3.9,6,6.89,1.49,2.99,2.23,6.48,2.23,10.45,0,1.34-.09,2.68-.27,4.01h8.37c.45,1.44,1.36,2.7,2.58,3.59,1.29.99,2.97,1.49,5.05,1.49,1.29.03,2.57-.22,3.75-.73.97-.42,1.81-1.1,2.41-1.97.54-.8.83-1.74.83-2.7,0-.94-.29-1.86-.83-2.64-.61-.87-1.44-1.57-2.41-2-1.18-.53-2.46-.79-3.75-.76h-10.16v-7.62l10.16-6.35v-.64h-17.15v-10.17h33.36v10.17l-9.85,6.04-.7.26v.76l.13-.06c2.37-.03,4.7.56,6.77,1.72,2.9,1.64,5.04,4.34,5.99,7.53v-18.58h11.85v5.39h.72c.72-1.72,1.88-3.22,3.38-4.34,1.53-1.17,3.45-1.76,5.75-1.76h3.81v.72h1.08v-7.9h12.21v7.9h19.75l6.46,26.93h2.15l7.18-26.93h12.57l-14.36,50.99h-12.57ZM368.13,300.34c-1.21.76-2.17,1.86-2.76,3.16-.67,1.39-1,3.09-1.01,5.1,0,2.01.33,3.71,1.01,5.1.59,1.3,1.55,2.4,2.76,3.16,1.26.71,2.68,1.08,4.13,1.08s2.87-.37,4.13-1.08c1.21-.76,2.17-1.86,2.76-3.16.67-1.39,1.01-3.09,1.01-5.1,0-2.01-.34-3.71-1.01-5.1-.59-1.3-1.55-2.4-2.76-3.16-1.26-.71-2.68-1.08-4.13-1.08s-2.87.37-4.13,1.08ZM327.45,300.41c-1.27.79-2.29,1.93-2.95,3.27-.71,1.54-1.08,3.22-1.08,4.92s.37,3.38,1.08,4.92c.66,1.34,1.68,2.48,2.95,3.27,1.27.79,2.74,1.21,4.23,1.21s2.96-.42,4.23-1.21c1.27-.79,2.29-1.93,2.95-3.27.71-1.54,1.08-3.22,1.08-4.92s-.37-3.38-1.08-4.92c-.51-.99-1.22-1.86-2.08-2.57-.86-.71-1.86-1.23-2.93-1.53-1.07-.31-2.19-.39-3.29-.25-1.1.14-2.17.51-3.12,1.08ZM242.99,327.28v-50.27h24.42c4.07,0,7.68.81,10.84,2.44,3.16,1.63,5.61,3.84,7.36,6.64,1.71,2.77,2.62,5.97,2.62,9.23s-.91,6.46-2.62,9.23c-1.75,2.8-4.2,5.02-7.36,6.64s-6.77,2.44-10.84,2.44h-11.13v13.65h-13.29ZM256.28,301.42h10.77c2.44,0,4.31-.55,5.6-1.65,1.29-1.1,1.94-2.59,1.94-4.45s-.65-3.35-1.94-4.45c-1.29-1.1-3.16-1.65-5.6-1.65h-10.77v12.21Z"></path><path d="M204.2,265.42c2.57,1.46,4.63,3.59,5.74,6.38l10.49,32.28c.76,3.5-.26,7.06-2.29,9.94l-36.53,42.84c-4.69,5.06-9.96,3.9-15.82,2.29-.17-.05-.73-.16-.8-.26l-9.27-28.48c-1.54-5.86.85-11.82,6.67-14.08,4.54-1.76,9.69-2.78,14.17-4.6,6.26-2.54,7.05-11.09.91-14.29-3.46-1.8-6.52-.18-9.91.9-6.12,1.95-12.26,3.89-18.37,5.97-5.15,1.75-7.76,5.26-6.59,10.82l13.43,41.29-.04.34-39.96-9.71c-3.47-1.15-6.37-3.44-7.81-6.89l-10.13-31.16c-1.12-4.24-.15-8.54,2.54-11.95,11.6-13.72,23.48-27.19,35.46-40.59,1.53-1.55,3.4-2.74,5.46-3.46,2.06-.72,4.26-.96,6.43-.7,14.24,2.94,28.45,5.97,42.6,9.31,3.49.82,7.7,1.56,11.05,2.63.9.31,1.76.71,2.58,1.19M190.13,312.88c-1.85,3.67-5.34,7.2-9.22,8.74-4.11,1.62-8.72,2.61-12.88,4.18-1.13.56-1.83,1.65-1.57,2.93l5.83,17.95c.56,1.3,2.13,1.76,3.13.66,9.73-11.48,19.56-22.87,29.26-34.37,2.38-2.83,5.31-5.23,4.28-9.42l-8.04-24.72c-.46-1.04-1.13-1.98-1.98-2.74-.85-.76-1.85-1.33-2.94-1.68-3.4-.98-7.39-1.59-10.89-2.38-10.08-2.28-20.15-4.67-30.25-6.84-4.95-1.06-8.94-2.59-13.06,1.63l-31.37,36.09c-.95,1.47-1.38,3.23-1.21,4.97,2.69,8.82,5.52,17.68,8.59,26.37.73,1.18,1.82,2.1,3.1,2.63l17.23,4.28c.77,0,1.18-.68,1.07-1.39-2.22-7.71-5.38-15.38-7.51-23.09-1.25-4.52-.9-9.56,1.91-13.42,2.42-3.31,5.71-6.99,9.61-8.5l27.56-8.95c15.32-2.95,26.21,13.41,19.34,27.08"></path><path d="M521.41,297.93c-.71,0-1.41-.17-2.02-.52-.6-.34-1.09-.82-1.44-1.41-.35-.59-.53-1.27-.53-1.95,0-.69.18-1.36.53-1.95.35-.59.85-1.07,1.44-1.41.62-.35,1.31-.53,2.02-.52.71,0,1.41.17,2.02.52.6.34,1.09.82,1.44,1.41.35.59.53,1.27.53,1.95,0,.69-.18,1.36-.53,1.95-.35.59-.85,1.07-1.44,1.41-.62.35-1.31.53-2.02.52ZM521.41,296.89c.52,0,1.04-.12,1.5-.36.43-.23.78-.58,1.02-1.01.25-.45.38-.96.37-1.48,0-.52-.12-1.02-.37-1.48-.24-.43-.59-.78-1.02-1.01-.46-.25-.98-.37-1.5-.36-.52,0-1.04.12-1.5.36-.43.23-.78.58-1.02,1.01-.25.45-.38.96-.37,1.48,0,.52.12,1.02.37,1.48.24.43.59.78,1.02,1.01.46.25.98.37,1.5.36h0ZM519.89,295.75v-3.62h1.7c.43-.03.87.09,1.22.35.14.12.25.27.32.44.07.17.1.35.09.54,0,.25-.06.49-.2.7-.13.18-.3.32-.5.41l.81,1.18h-1.18l-.7-1h-.48v1h-1.07ZM521.59,293.86c.14,0,.27-.03.39-.1.04-.03.08-.08.1-.12.02-.05.04-.1.03-.16,0-.06,0-.11-.03-.16-.02-.05-.06-.09-.1-.13-.11-.08-.25-.11-.39-.1h-.63v.78h.63Z"></path></svg>
       </a>
       <nav id="site-nav" style="display: flex; align-items: center; gap: 32px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">
-        <a href="Diensten.dc.html" style="font-size: 16px; font-weight: 500; color: #63736F;" style-hover="color: #0E2D30;">Diensten</a>
-        <a href="Platform.dc.html" style="font-size: 16px; font-weight: 500; color: #63736F;" style-hover="color: #0E2D30;">Platform</a>
-        <a href="Over ons.dc.html" style="font-size: 16px; font-weight: 500; color: #63736F;" style-hover="color: #0E2D30;">Over ons</a>
-        <a href="Tarieven.dc.html" style="font-size: 16px; font-weight: 500; color: #63736F;" style-hover="color: #0E2D30;">Tarieven</a>
-        <a href="Contact.dc.html" style="font-size: 16px; font-weight: 500; color: #63736F;" style-hover="color: #0E2D30;">Contact</a>
+        <a href="diensten.html" style="font-size: 16px; font-weight: 500; color: #63736F;" style-hover="color: #0E2D30;">Diensten</a>
+        <a href="platform.html" style="font-size: 16px; font-weight: 500; color: #63736F;" style-hover="color: #0E2D30;">Platform</a>
+        <a href="over-ons.html" style="font-size: 16px; font-weight: 500; color: #63736F;" style-hover="color: #0E2D30;">Over ons</a>
+        <a href="tarieven.html" style="font-size: 16px; font-weight: 500; color: #63736F;" style-hover="color: #0E2D30;">Tarieven</a>
+        <a href="contact.html" style="font-size: 16px; font-weight: 500; color: #63736F;" style-hover="color: #0E2D30;">Contact</a>
       </nav>
       <div id="header-actions" style="display: flex; align-items: center; gap: 20px;">
         <a href="https://vastgoed-portal-sepia.vercel.app/login" style="display: inline-flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; color: #0E2D30; white-space: nowrap;"><svg viewBox="0 0 20 20" aria-hidden="true" style="width: 19px; height: 19px;" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="6.75" r="3"></circle><path d="M3.75 17c.55-3.1 3.1-4.75 6.25-4.75S15.7 13.9 16.25 17"></path></svg>Mijn Prop3rty</a>
-        <a href="Tarieven.dc.html" style="display: inline-flex; align-items: center; gap: 8px; background: #0E2D30; color: #ffffff; font-size: 16px; font-weight: 700; padding: 13px 22px; border-radius: 999px; white-space: nowrap;" style-hover="background: #16383B; color: #ffffff;">Plan een gesprek</a>
+        <a href="tarieven.html" style="display: inline-flex; align-items: center; gap: 8px; background: #0E2D30; color: #ffffff; font-size: 16px; font-weight: 700; padding: 13px 22px; border-radius: 999px; white-space: nowrap;" style-hover="background: #16383B; color: #ffffff;">Plan een gesprek</a>
       </div>
       <div id="menu-btn" role="button" aria-label="Menu" style="display: none; align-items: center; justify-content: center; width: 44px; height: 44px; flex: none; cursor: pointer; border-radius: 999px;">
         <svg viewBox="0 0 22 22" aria-hidden="true" style="width: 22px; height: 22px;" fill="none" stroke="#0E2D30" stroke-width="2" stroke-linecap="round"><path d="M3 6.5h16"></path><path d="M3 11h16"></path><path d="M3 15.5h16"></path></svg>
@@ -916,19 +916,19 @@ function init_whats_app_modal() {
   </header>
   <div id="mobile-menu" style="position: fixed; inset: 0; z-index: 100; background: #0E2D30; display: flex; flex-direction: column; padding: 28px 28px 36px; opacity: 0; visibility: hidden; clip-path: circle(0px at calc(100% - 52px) 52px); transition: clip-path 0.55s cubic-bezier(0.7, 0, 0.2, 1), opacity 0.3s ease 0.25s, visibility 0s linear 0.55s;">
     <div style="display: flex; align-items: center; justify-content: space-between;">
-      <a href="index.dc.html" style="font-size: 22px; font-weight: 900; letter-spacing: -0.02em; color: #F6F9F4;">Prop3rty</a>
+      <a href="index.html" style="font-size: 22px; font-weight: 900; letter-spacing: -0.02em; color: #F6F9F4;">Prop3rty</a>
       <div id="menu-close" role="button" aria-label="Sluit menu" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; cursor: pointer; border: 1px solid rgba(246,249,244,0.25); border-radius: 999px;">
         <svg viewBox="0 0 20 20" aria-hidden="true" style="width: 18px; height: 18px;" fill="none" stroke="#F6F9F4" stroke-width="2" stroke-linecap="round"><path d="M5 5l10 10"></path><path d="M15 5L5 15"></path></svg>
       </div>
     </div>
     <nav style="display: flex; flex-direction: column; gap: 6px; margin: auto 0; padding: 40px 0;">
-      <a href="Diensten.dc.html" style="font-size: 38px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.25; color: #F6F9F4; padding: 6px 0;">Diensten</a>
-      <a href="Platform.dc.html" style="font-size: 38px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.25; color: #F6F9F4; padding: 6px 0;">Platform</a>
-      <a href="Over ons.dc.html" style="font-size: 38px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.25; color: #F6F9F4; padding: 6px 0;">Verhalen</a>
-      <a href="Tarieven.dc.html" style="font-size: 38px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.25; color: #F6F9F4; padding: 6px 0;">Tarieven</a>
+      <a href="diensten.html" style="font-size: 38px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.25; color: #F6F9F4; padding: 6px 0;">Diensten</a>
+      <a href="platform.html" style="font-size: 38px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.25; color: #F6F9F4; padding: 6px 0;">Platform</a>
+      <a href="over-ons.html" style="font-size: 38px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.25; color: #F6F9F4; padding: 6px 0;">Verhalen</a>
+      <a href="tarieven.html" style="font-size: 38px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.25; color: #F6F9F4; padding: 6px 0;">Tarieven</a>
     </nav>
     <div style="display: flex; flex-direction: column; gap: 12px;">
-      <a href="Tarieven.dc.html" style="display: block; text-align: center; background: #CEFF8A; color: #14141A; font-size: 17px; font-weight: 700; padding: 16px 26px; border-radius: 999px;">Plan een gesprek</a>
+      <a href="tarieven.html" style="display: block; text-align: center; background: #CEFF8A; color: #14141A; font-size: 17px; font-weight: 700; padding: 16px 26px; border-radius: 999px;">Plan een gesprek</a>
       <a href="https://vastgoed-portal-sepia.vercel.app/login" style="display: block; text-align: center; color: #F6F9F4; font-size: 17px; font-weight: 700; padding: 15px 26px; background: rgba(255,255,255,0.14); border-radius: 999px;">Mijn Prop3rty</a>
     </div>
   </div>
@@ -947,8 +947,8 @@ function init_whats_app_modal() {
       <h1 style="margin: 0 auto; max-width: 900px; font-size: 68px; line-height: 1.05; letter-spacing: -0.035em; font-weight: 900; color: #0E2D30; text-wrap: balance;">Wij nemen het beheer van je vastgoed volledig uit handen.</h1>
       <p style="margin: 20px auto 0; max-width: 680px; font-size: 19px; line-height: 1.6; color: #63736F; text-wrap: pretty;">Ons vaste team werkt met een autonoom systeem dat het grootste deel van het beheerwerk automatiseert. Daardoor beheren we sneller, beter en kostenefficiënter. Jij houdt volledige controle, je huurders krijgen betere service en onder aan de streep levert het meer rendement op.</p>
       <div style="display: flex; justify-content: center; gap: 14px; margin-top: 34px; flex-wrap: wrap;">
-        <a href="Tarieven.dc.html" style="display: inline-flex; align-items: center; background: #ffffff; color: #0E2D30; font-size: 16px; font-weight: 700; padding: 15px 28px; border-radius: 999px;" style-hover="border-color: #0E2D30; color: #0E2D30;">Plan een gesprek</a>
-        <a href="Diensten.dc.html" style="display: inline-flex; align-items: center; gap: 8px; background: #0E2D30; color: #ffffff; font-size: 16px; font-weight: 700; padding: 15px 26px; border-radius: 999px;" style-hover="background: #16383B; color: #ffffff;">Ontdek onze diensten<img src="https://cdn.prod.website-files.com/668532b1e1ce82a9331d1a87/668532b1e1ce82a9331d1ab3_cheveron-right.svg" alt="" style="width: 18px; height: 18px;"></a>
+        <a href="tarieven.html" style="display: inline-flex; align-items: center; background: #ffffff; color: #0E2D30; font-size: 16px; font-weight: 700; padding: 15px 28px; border-radius: 999px;" style-hover="border-color: #0E2D30; color: #0E2D30;">Plan een gesprek</a>
+        <a href="diensten.html" style="display: inline-flex; align-items: center; gap: 8px; background: #0E2D30; color: #ffffff; font-size: 16px; font-weight: 700; padding: 15px 26px; border-radius: 999px;" style-hover="background: #16383B; color: #ffffff;">Ontdek onze diensten<img src="https://cdn.prod.website-files.com/668532b1e1ce82a9331d1a87/668532b1e1ce82a9331d1ab3_cheveron-right.svg" alt="" style="width: 18px; height: 18px;"></a>
       </div>
       </div>
     <div style="position: relative; margin-top: 64px; padding-bottom: 88px;">
@@ -1055,7 +1055,7 @@ function init_whats_app_modal() {
           <p style="font-size: 19px; line-height: 1.55; color: #63736F; margin-top: 16px; max-width: 26em; text-wrap: pretty;"><strong style="font-weight: 700; color: #0E2D30;">Administratief, technisch en commercieel beheer</strong> in één hand.</p>
           <p style="font-size: 17px; line-height: 1.6; color: #63736F; margin-top: 14px; max-width: 28em; text-wrap: pretty;">Ons autonome systeem verwerkt meldingen, plant onderhoud in en bewaakt je dossiers. <strong style="font-weight: 700; color: #0E2D30;">Jij houdt volledige controle via je portaal.</strong></p>
           <p style="font-size: 17px; line-height: 1.6; color: #63736F; margin-top: 12px; max-width: 28em; text-wrap: pretty;">Elk kwartaal een rapportage met <strong style="font-weight: 700; color: #0E2D30;">rendement, leegstand en onderhoudskosten per pand</strong>.</p>
-          <a href="Tarieven.dc.html" style="display: inline-flex; margin-top: 30px; background: #0E2D30; color: #ffffff; font-size: 16px; font-weight: 700; padding: 15px 26px; border-radius: 999px;" style-hover="background: #16383B; color: #ffffff;">Plan een gesprek</a>
+          <a href="tarieven.html" style="display: inline-flex; margin-top: 30px; background: #0E2D30; color: #ffffff; font-size: 16px; font-weight: 700; padding: 15px 26px; border-radius: 999px;" style-hover="background: #16383B; color: #ffffff;">Plan een gesprek</a>
         </div>
       </div>
       <div data-logo-wall-shuffle="false" data-logo-wall-cycle-init="" style="margin-top: 56px; border-top: 1px solid #E2E8DE; border-bottom: 1px solid #E2E8DE;" data-reveal="">
@@ -1281,7 +1281,7 @@ function init_whats_app_modal() {
           <p style="font-size: 19px; line-height: 1.55; color: #63736F; margin-top: 16px; max-width: 26em; text-wrap: pretty;">Je melding is <strong style="font-weight: 700; color: #0E2D30;">binnen enkele minuten verwerkt en ingepland</strong>, en binnen 24 uur ligt er een oplossing.</p>
           <p style="font-size: 17px; line-height: 1.6; color: #63736F; margin-top: 14px; max-width: 28em; text-wrap: pretty;">Een melding doe je <strong style="font-weight: 700; color: #0E2D30;">in twee minuten, met foto</strong>. Je ziet wie ermee bezig is en wanneer de vakman komt.</p>
           <p style="font-size: 17px; line-height: 1.6; color: #63736F; margin-top: 12px; max-width: 28em; text-wrap: pretty;">Contracten en afrekeningen staan altijd in je portaal. Bij spoed sta je nooit in de wacht: <strong style="font-weight: 700; color: #0E2D30;">één vast team</strong>.</p>
-          <a href="Tarieven.dc.html" style="display: inline-flex; margin-top: 30px; background: #0E2D30; color: #ffffff; font-size: 16px; font-weight: 700; padding: 15px 26px; border-radius: 999px;" style-hover="background: #16383B; color: #ffffff;">Plan een gesprek</a>
+          <a href="tarieven.html" style="display: inline-flex; margin-top: 30px; background: #0E2D30; color: #ffffff; font-size: 16px; font-weight: 700; padding: 15px 26px; border-radius: 999px;" style-hover="background: #16383B; color: #ffffff;">Plan een gesprek</a>
         </div>
         <img loading="lazy" decoding="async" class="m-photo" data-parallax="trigger" data-parallax-start="8" data-parallax-end="-8" src="assets/img/h-1w2anky1kfypsb42pk.jpg" alt="Beheerder van Prop3rty aan de gracht" style="width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 24px;">
       </div>
@@ -1406,8 +1406,8 @@ function init_whats_app_modal() {
         <h2 style="font-size: 52px; line-height: 1.04; letter-spacing: -0.035em; font-weight: 900; color: #ffffff; max-width: 12em; text-wrap: balance;">Overgestapt binnen één dag</h2>
         <p style="font-size: 19px; line-height: 1.72; color: #A9BCBA; margin-top: 26px; max-width: 30em;">Wij nemen het dossier over van je huidige beheerder, brengen je panden en huurders in het portaal en jij kijkt mee. Door onze technologie is dat meestal binnen één dag rond, dus overstappen is nooit meer een reden om te blijven zitten.</p>
         <div style="display: flex; gap: 14px; margin-top: 38px; flex-wrap: wrap;">
-          <a href="Tarieven.dc.html" style="display: inline-flex; align-items: center; background: #CEFF8A; color: #14141A; font-size: 17px; font-weight: 700; padding: 20px 34px; border-radius: 999px;" style-hover="background: #DDFFA4; color: #14141A;">Plan een gesprek</a>
-          <a href="Diensten.dc.html" style="display: inline-flex; align-items: center; color: #ffffff; font-size: 17px; font-weight: 700; padding: 20px 34px; background: rgba(255,255,255,0.14); border-radius: 999px;" style-hover="background: #ffffff; color: #132B2E;">Ontdek onze diensten</a>
+          <a href="tarieven.html" style="display: inline-flex; align-items: center; background: #CEFF8A; color: #14141A; font-size: 17px; font-weight: 700; padding: 20px 34px; border-radius: 999px;" style-hover="background: #DDFFA4; color: #14141A;">Plan een gesprek</a>
+          <a href="diensten.html" style="display: inline-flex; align-items: center; color: #ffffff; font-size: 17px; font-weight: 700; padding: 20px 34px; background: rgba(255,255,255,0.14); border-radius: 999px;" style-hover="background: #ffffff; color: #132B2E;">Ontdek onze diensten</a>
         </div>
       </div>
       <div style="position: relative; height: 520px; overflow: hidden; -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 15%, #000 85%, transparent 100%); mask-image: linear-gradient(180deg, transparent 0%, #000 15%, #000 85%, transparent 100%);">
@@ -1497,22 +1497,22 @@ function init_whats_app_modal() {
           <div>
             <p style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.5);">Pagina's</p>
             <div style="display: flex; flex-direction: column; gap: 13px; margin-top: 20px;">
-              <a href="index.dc.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Home</a>
-              <a href="Diensten.dc.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Diensten</a>
-              <a href="Platform.dc.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Platform</a>
-              <a href="Tarieven.dc.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Tarieven</a>
-              <a href="Over ons.dc.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Over ons</a>
-              <a href="Contact.dc.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Contact</a>
+              <a href="index.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Home</a>
+              <a href="diensten.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Diensten</a>
+              <a href="platform.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Platform</a>
+              <a href="tarieven.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Tarieven</a>
+              <a href="over-ons.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Over ons</a>
+              <a href="contact.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Contact</a>
             </div>
           </div>
           <div>
             <p style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.5);">Portaal</p>
             <div style="display: flex; flex-direction: column; gap: 13px; margin-top: 20px;">
-              <a href="Prop3rty Portaal.dc.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Eigenarenportaal</a>
-              <a href="Prop3rty Portaal.dc.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Huurdersportaal</a>
-              <a href="Platform.dc.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Documenten</a>
+              <a href="portaal.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Eigenarenportaal</a>
+              <a href="portaal.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Huurdersportaal</a>
+              <a href="platform.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Documenten</a>
               <a href="https://vastgoed-portal-sepia.vercel.app/login" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Inloggen</a>
-              <a href="Prop3rty Portaal.dc.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Account aanmaken</a>
+              <a href="portaal.html" style="font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.85);" style-hover="color: #CEFF8A;">Account aanmaken</a>
             </div>
           </div>
           <div>
@@ -1527,8 +1527,8 @@ function init_whats_app_modal() {
       <div style="display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 26px 0 32px; border-top: 1px solid rgba(255,255,255,0.14); flex-wrap: wrap;">
         <p style="font-size: 14px; color: rgba(255,255,255,0.55);">&copy; 2026 Prop3rty. Alle rechten voorbehouden. &middot; Made by Mr. Boost</p>
         <div style="display: flex; align-items: center; gap: 22px;">
-          <a href="Contact.dc.html" style="font-size: 14px; color: rgba(255,255,255,0.55);" style-hover="color: #CEFF8A;">Privacybeleid</a>
-          <a href="Contact.dc.html" style="font-size: 14px; color: rgba(255,255,255,0.55);" style-hover="color: #CEFF8A;">Voorwaarden</a>
+          <a href="contact.html" style="font-size: 14px; color: rgba(255,255,255,0.55);" style-hover="color: #CEFF8A;">Privacybeleid</a>
+          <a href="contact.html" style="font-size: 14px; color: rgba(255,255,255,0.55);" style-hover="color: #CEFF8A;">Voorwaarden</a>
           <div style="display: flex; align-items: center; gap: 10px;">
             <a href="https://nl.linkedin.com/company/prop3rty" target="_blank" rel="noopener" aria-label="LinkedIn" style="display: grid; place-items: center; width: 38px; height: 38px; border-radius: 999px; background: rgba(255,255,255,0.1);" style-hover="background: rgba(206,255,138,0.25);"><svg viewBox="0 0 20 20" aria-hidden="true" style="width: 18px; height: 18px;" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="14" height="14" rx="3"></rect><path d="M6.6 8.6v5"></path><path d="M6.6 6.3v.1"></path><path d="M9.8 13.6v-5"></path><path d="M9.8 10.6c0-1.1.8-2 1.9-2s1.9.9 1.9 2v3"></path></svg></a>
             <a href="https://www.instagram.com/prop3rty.nl/" target="_blank" rel="noopener" aria-label="Instagram" style="display: grid; place-items: center; width: 38px; height: 38px; border-radius: 999px; background: rgba(255,255,255,0.1);" style-hover="background: rgba(206,255,138,0.25);"><svg viewBox="0 0 20 20" aria-hidden="true" style="width: 18px; height: 18px;" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="14" height="14" rx="4"></rect><circle cx="10" cy="10" r="3.2"></circle><path d="M13.9 6.1v.1"></path></svg></a>
@@ -1539,7 +1539,7 @@ function init_whats_app_modal() {
   </footer>
 </div>
   <div id="sob-wrap" style="position: fixed; right: 20px; bottom: 96px; z-index: 89; width: 120px; height: 120px; opacity: 0; transform: scale(0.6) rotate(-20deg); pointer-events: none; transition: opacity 0.45s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);">
-    <a href="Contact.dc.html" aria-label="Sell or Buy your Prop3rty" style="position: absolute; inset: 0; display: grid; place-items: center; color: #0E2D30; transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);" style-hover="transform: scale(1.07); color: #0E2D30;">
+    <a href="contact.html" aria-label="Sell or Buy your Prop3rty" style="position: absolute; inset: 0; display: grid; place-items: center; color: #0E2D30; transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);" style-hover="transform: scale(1.07); color: #0E2D30;">
       <svg viewBox="0 0 100 100" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; animation: sob-spin 26s linear infinite; "><polygon points="50.00,0.00 58.39,7.83 69.13,3.81 73.89,14.25 85.36,14.64 85.75,26.11 96.19,30.87 92.17,41.61 100.00,50.00 92.17,58.39 96.19,69.13 85.75,73.89 85.36,85.36 73.89,85.75 69.13,96.19 58.39,92.17 50.00,100.00 41.61,92.17 30.87,96.19 26.11,85.75 14.64,85.36 14.25,73.89 3.81,69.13 7.83,58.39 0.00,50.00 7.83,41.61 3.81,30.87 14.25,26.11 14.64,14.64 26.11,14.25 30.87,3.81 41.61,7.83" fill="#CEFF8A" stroke="#0E2D30" stroke-width="1.2" stroke-linejoin="round"></polygon></svg>
       <span data-sob-t="" style="position: relative; display: block; text-align: center; font-size: 14px; line-height: 1.02; font-weight: 900; letter-spacing: -0.02em; color: #0E2D30; transform: rotate(-9deg);">Sell or Buy<br>your Prop3rty</span>
     </a>
